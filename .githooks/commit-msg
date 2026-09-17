@@ -1,0 +1,157 @@
+#!/bin/bash
+# commit-msg hook for Bingo
+# Validates Conventional Commits format and auto-injects attribution trailers
+# on agent branches.
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+BRANCH="$(git symbolic-ref --short HEAD 2>/dev/null || echo 'HEAD')"
+
+# ---- Configuration ----
+CONFIG=".githooks/config.yaml"
+
+# Simple YAML value extractor (no external dependencies)
+# Reads a flat key: supports top-level and one-level-nested keys via dot notation.
+yaml_get() {
+  local key="$1"
+  local file="$2"
+  grep -E "^\s*${key}:" "$file" 2>/dev/null | head -1 | sed -E "s/^\s*${key}:\s*//; s/^\"//; s/\"$//; s/^'//; s/'$//; s/\s*$//"
+}
+
+# Read config values
+# Usage: get_config <key>   e.g. get_config operator.email
+get_config() {
+  local key="$1"
+  python3 -c "
+import sys, yaml
+try:
+    with open('$CONFIG') as f:
+        data = yaml.safe_load(f)
+    keys = '$key'.split('.')
+    val = data
+    for k in keys:
+        val = val[k]
+    if isinstance(val, list):
+        for item in val:
+            print(item)
+    else:
+        print(val)
+except Exception as e:
+    sys.exit(1)
+" 2>/dev/null || echo ""
+}
+
+# We need Python with PyYAML. Check for it.
+if ! python3 -c "import yaml" 2>/dev/null; then
+  echo "ERROR: PyYAML is required for the commit-msg hook." >&2
+  echo "Install it: pip install pyyaml" >&2
+  exit 1
+fi
+
+# Read operator identity
+OPERATOR_EMAIL=$(get_config operator.email)
+OPERATOR_NAME=$(get_config operator.name)
+# Fallback to git config if not set
+if [ -z "$OPERATOR_EMAIL" ]; then
+  OPERATOR_EMAIL=$(git config user.email || echo "unknown")
+fi
+if [ -z "$OPERATOR_NAME" ]; then
+  OPERATOR_NAME=$(git config user.name || echo "Unknown")
+fi
+
+# ---- Detect branch type ----
+AGENT_PREFIX=""
+AGENT_TOOL=""
+
+case "$BRANCH" in
+  ai/*)
+    AGENT_PREFIX="ai"
+    AGENT_TOOL="ai-agent"
+    ;;
+  claude/*)
+    AGENT_PREFIX="claude"
+    AGENT_TOOL="claude-code"
+    ;;
+  codex/*)
+    AGENT_PREFIX="codex"
+    AGENT_TOOL="codex"
+    ;;
+  copilot/*)
+    AGENT_PREFIX="copilot"
+    AGENT_TOOL="copilot"
+    ;;
+  cursor/*)
+    AGENT_PREFIX="cursor"
+    AGENT_TOOL="cursor"
+    ;;
+esac
+
+# ---- Conventional Commits validation ----
+# Read the commit message (strip comments)
+MSG="$(grep -v '^#' "$COMMIT_MSG_FILE" | head -1)"
+
+if [ -z "$MSG" ]; then
+  echo "ERROR: Commit message is empty." >&2
+  exit 1
+fi
+
+# ---- Bypass validation for self-generated and plumbing commits ----
+# Merge commits, fixup!, and squash! prefixes are produced by git itself
+# or by interactive rebase cleanup workflows. They don't follow Conventional
+# Commits by design and must not be rejected or get trailers injected.
+case "$MSG" in
+  Merge*|fixup!*|squash!*)
+    exit 0
+    ;;
+esac
+
+CONVENTIONAL_RE='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+'
+if ! echo "$MSG" | grep -qE "$CONVENTIONAL_RE"; then
+  echo "ERROR: Commit message does not follow Conventional Commits format." >&2
+  echo "  Expected: <type>(<scope>): <subject>" >&2
+  echo "  Allowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert" >&2
+  echo "  Got: $MSG" >&2
+  exit 1
+fi
+
+# ---- Auto-inject attribution trailers on agent branches ----
+if [ -n "$AGENT_TOOL" ]; then
+  # Check if trailers already present
+  HAS_GENERATED=$(grep -c '^Generated-By:' "$COMMIT_MSG_FILE" 2>/dev/null || true)
+  HAS_COAUTHOR=$(grep -c '^Co-authored-by:' "$COMMIT_MSG_FILE" 2>/dev/null || true)
+
+  # Get agent details from config
+  AGENT_NAME=$(get_config "agents.${AGENT_TOOL}.name")
+  AGENT_EMAIL=$(get_config "agents.${AGENT_TOOL}.email")
+  AGENT_VERSION=$(get_config "agents.${AGENT_TOOL}.version")
+
+  # Fallbacks if config lookup failed
+  [ -z "$AGENT_NAME" ] && AGENT_NAME="AI Agent"
+  [ -z "$AGENT_EMAIL" ] && AGENT_EMAIL="noreply@example.com"
+  [ -z "$AGENT_VERSION" ] && AGENT_VERSION="unknown"
+
+  # Detect model from environment (set by some tools) or git config
+  MODEL="$(git config user.name 2>/dev/null || echo 'unknown')"
+
+  TRAILERS=""
+  if [ "$HAS_GENERATED" -eq 0 ]; then
+    TRAILERS="${TRAILERS}Generated-By: ${AGENT_TOOL}/${AGENT_VERSION} (model: ${MODEL}; operator: ${OPERATOR_EMAIL})
+"
+  fi
+  if [ "$HAS_COAUTHOR" -eq 0 ]; then
+    TRAILERS="${TRAILERS}Co-authored-by: ${AGENT_NAME} <${AGENT_EMAIL}>
+"
+  fi
+
+  if [ -n "$TRAILERS" ]; then
+    # Ensure there's a blank line before trailers
+    LAST_LINE=$(tail -1 "$COMMIT_MSG_FILE")
+    if [ -n "$LAST_LINE" ]; then
+      echo "" >> "$COMMIT_MSG_FILE"
+    fi
+    printf '%b' "$TRAILERS" >> "$COMMIT_MSG_FILE"
+  fi
+fi
+
+exit 0

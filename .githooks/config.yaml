@@ -1,0 +1,31 @@
+# Agent identities used for trailer generation
+agents:
+  claude-code:
+    name: "Claude Code"
+    email: "noreply@anthropic.com"
+    version: "1.0"
+  codex:
+    name: "OpenAI Codex"
+    email: "noreply@openai.com"
+    version: "1.0"
+  copilot:
+    name: "GitHub Copilot"
+    email: "noreply@github.com"
+    version: "1.0"
+  cursor:
+    name: "Cursor"
+    email: "noreply@anysphere.com"
+    version: "1.0"
+
+# Bot email patterns (for detection even without branch prefix)
+bot_patterns:
+  - "noreply@anthropic.com"
+  - "noreply@openai.com"
+  - "[bot]@users.noreply.github.com"
+  - "noreply@github.com"
+  - "noreply@anysphere.com"
+
+# Human operator (filled during setup)
+operator:
+  name: ""
+  email: ""
