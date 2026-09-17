@@ -50,6 +50,8 @@ All commits must follow [Conventional Commits](https://www.conventionalcommits.o
 
 **Allowed types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
+**Bypass:** Merge commits (`Merge ...`), fixup commits (`fixup! ...`), and squash commits (`squash! ...`) are automatically allowed through the hook without Conventional Commits validation. These are produced by git itself or by interactive rebase cleanup workflows.
+
 The `<scope>` is optional but encouraged (e.g., module or component name).
 
 #### Attribution Trailers (Agent Branches)

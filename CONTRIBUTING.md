@@ -59,6 +59,8 @@ All commits must follow the [Conventional Commits](https://www convencionalcommi
 
 **Allowed types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
+**Bypass:** Merge commits (`Merge ...`), fixup commits (`fixup! ...`), and squash commits (`squash! ...`) are automatically allowed through the hook — these are produced by git itself and don't follow Conventional Commits by design.
+
 ### Example (Human)
 
 ```
