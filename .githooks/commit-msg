@@ -1,0 +1,14 @@
+#!/bin/sh
+# Prepend AGENT_ prefix to commit messages that don't already have it.
+
+COMMIT_MSG_FILE="$1"
+MESSAGE=$(head -1 "$COMMIT_MSG_FILE")
+
+case "$MESSAGE" in
+  AGENT_*) ;;
+  *)
+    echo "AGENT_ $MESSAGE" > "$COMMIT_MSG_FILE"
+    ;;
+esac
+
+exit 0
