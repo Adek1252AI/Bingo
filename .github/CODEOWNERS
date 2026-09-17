@@ -1,0 +1,5 @@
+# CODEOWNERS for the Bingo repository.
+# Every file in the repo is owned by the repo owner.
+# This prevents PR approvals from being blocked when
+# branch protection has require_code_owner_reviews=true.
+* @Adek1252AI
