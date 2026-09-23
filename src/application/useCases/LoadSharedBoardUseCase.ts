@@ -1,5 +1,5 @@
-
 import { Board } from '../../domain/entities';
+import { validateBoard } from '../../domain/rules/board-rules';
 import { EncodingAdapter } from '../../infrastructure/sharing/EncodingAdapter';
 import { ArrangementEngine } from '../../infrastructure/sharing/ArrangementEngine';
 
@@ -35,6 +35,10 @@ export class LoadSharedBoardUseCase {
    */
   execute(link: string): LoadSharedBoardResult {
     const payload = this.decodePayload(link);
+
+    // Validate the payload — reject duplicate words (EC-09 fix).
+    validateBoard({ words: payload.words });
+
     const playerSeed = this.generatePlayerSeed();
     const arrangement = this.arrangementEngine.arrange(
       payload.words,

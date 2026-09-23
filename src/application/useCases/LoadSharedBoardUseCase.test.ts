@@ -232,4 +232,59 @@ describe('LoadSharedBoardUseCase', () => {
       expect(result.board.words).toEqual(words);
     });
   });
+
+  describe('execute - duplicate word rejection (EC-09)', () => {
+    it('rejects a payload with exact duplicate words', () => {
+      const dupWords = Array.from({ length: 23 }, (_, i) => `word-${i}`);
+      dupWords.push('word-0'); // exact duplicate
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: dupWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/duplicates found: word-0/);
+    });
+
+    it('rejects a payload with case-insensitive duplicate words', () => {
+      const dupWords = Array.from({ length: 23 }, (_, i) => `word-${i}`);
+      dupWords.push('Word-0'); // case-insensitive duplicate of 'word-0'
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: dupWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/duplicates found/i);
+    });
+
+    it('rejects a payload with whitespace-padded duplicate words', () => {
+      const dupWords = Array.from({ length: 23 }, (_, i) => `word-${i}`);
+      dupWords.push('  word-0  '); // whitespace-padded duplicate
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: dupWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/duplicates found: word-0/);
+    });
+
+    it('rejects a payload where all 24 words are identical', () => {
+      const dupWords = Array(24).fill('same-word');
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: dupWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/duplicates found/);
+    });
+
+    it('accepts a payload with 24 unique words (no duplicates)', () => {
+      expect(() => useCase.execute('payload')).not.toThrow();
+    });
+
+    it('does not call arrange when validation fails', () => {
+      const dupWords = Array.from({ length: 23 }, (_, i) => `word-${i}`);
+      dupWords.push('word-0');
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: dupWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow();
+      expect(arrangementEngine.arrange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('execute - word count validation', () => {
+    it('rejects a payload with fewer than 24 words', () => {
+      const shortWords = Array.from({ length: 23 }, (_, i) => `word-${i}`);
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: shortWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/must have exactly 24 words, got 23/);
+    });
+
+    it('rejects a payload with more than 24 words', () => {
+      const longWords = Array.from({ length: 25 }, (_, i) => `word-${i}`);
+      vi.mocked(mockEncodingAdapter.decode).mockReturnValue({ words: longWords, seed: 's', topic: 't' });
+      expect(() => useCase.execute('payload')).toThrow(/must have exactly 24 words, got 25/);
+    });
+  });
 });
