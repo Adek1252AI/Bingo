@@ -10,18 +10,35 @@ A modern bingo game website — words instead of numbers.
 
 ## Status
 
-Scaffolding / pre-flight. The Obsidian project track is set up; the codebase has not been started yet.
+Initial codebase scaffold created. Clean Architecture structure in place, 10 movie word pools, core use cases and infrastructure written. UI is a minimal placeholder. Not yet deployed.
 
-## Tech stack (planned)
+## Architecture
 
-- Next.js + TypeScript
-- Clean Architecture (domain / application / infrastructure / interface layers)
-- Hosted on Vercel (free tier)
+```
+src/
+  domain/          — entities (Topic, Board) + validation rules
+  application/     — use cases (GenerateRandomBoard, CreateShareLink, LoadSharedBoard)
+  infrastructure/  — word pool repository, encoding adapter, arrangement engine
+  interface/       — Next.js app router + React components
+  word-pools/      — JSON files, one per movie topic (~30 words each)
+```
+
+## Tech stack
+
+- Next.js 14 (app router, static export)
+- TypeScript (strict)
+- React 18
+- Hosted on Vercel (static export, no custom backend)
 - Word pools as JSON files bundled with the app
-- Shareable links via URL-encoded seed (no server)
-- Custom boards via localStorage (no cross-device persistence for v1)
+- Shareable links via base64url-encoded payload + deterministic seeded shuffle
+- Custom boards deferred (localStorage, later)
+- AI-generated topic word lists deferred
 
-See the full analysis: [Research/Kanban-Obsidian-Pattern-B.md](../Research_General/Kanban-Obsidian-Pattern-B.md) in the Obsidian vault.
+## Deferred features
+
+- Custom boards (user-provided words, localStorage)
+- AI-generated topic word lists (user says a movie → AI generates → user adjusts)
+- User-extendable topics (runtime mechanism for adding word lists)
 
 ## Repository
 
