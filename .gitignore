@@ -9,6 +9,11 @@ coverage
 # Production
 build
 dist
+.next
+out
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
 
 # Misc
 .DS_Store

@@ -6,11 +6,28 @@ A modern bingo game website — words instead of numbers. Players pick a topic (
 
 ## Status
 
-Codebase scaffold built and building. Next.js 15 (app router, static export) + TypeScript strict. Clean Architecture folder structure in place. 10 movie word-pools bundled. Core use cases and infrastructure written. Minimal UI placeholder (topic picker → generate → board grid → share link). Not yet deployed.
+Deployed to GitHub Pages at https://adek1252ai.github.io/Bingo/ (auto-deploys on push to `master`). Next.js 15 (app router, static export) + TypeScript strict. Clean Architecture folder structure in place. 10 movie word-pools bundled. Core use cases and infrastructure written. Minimal UI placeholder (topic picker → generate → board grid → share link).
 
 ## Repository
 
 https://github.com/Adek1252AI/Bingo
+
+## Deployment (GitHub Pages)
+
+**Choice: `gh-pages` branch** (not `docs/` on `master`). Rationale: build artifacts never land on `master`, the build runs in CI (no "commit the dist" workflow), and `docs/` would require committing a fresh export on every change.
+
+How it works:
+
+1. Push to `master` triggers `.github/workflows/deploy.yml`.
+2. The workflow runs `npm ci` + `npm run build` (static export → `out/`), adds a `.nojekyll` file (GitHub Pages' Jekyll would otherwise drop `_next/` — directories starting with `_`), and pushes `out/` to the `gh-pages` branch via `peaceiris/actions-gh-pages`.
+3. GitHub Pages serves `gh-pages` at https://adek1252ai.github.io/Bingo/ (repo Settings → Pages → Source: "Deploy from a branch", branch `gh-pages`, directory `/ (root)` — set once).
+
+Two config details that make the subpath work:
+
+- `basePath: '/Bingo'` in `next.config.js` — the site is served under `/Bingo/`, so asset URLs must be `/Bingo/_next/...` (without this, the export references `/_next/...` which 404s on a project site). Any code that builds absolute URLs by hand must include the base path.
+- `trailingSlash: true` makes the export emit `out/index.html`, which Pages serves at `/Bingo/`.
+
+The workflow can also be triggered manually (workflow_dispatch).
 
 ## Architecture (for agents)
 
