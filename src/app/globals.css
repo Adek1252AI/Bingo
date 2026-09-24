@@ -336,6 +336,86 @@ body {
   color: var(--primary-foreground);
 }
 
+/* ---- Wordmark Gradient ---- */
+/* The single allowed polish item: gradient text on the Bingo wordmark. */
+.wordmark-gradient {
+  background: linear-gradient(135deg, var(--accent), oklch(0.7 0.25 340));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Glassmorphic Header ---- */
+.glass-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: oklch(0.20 0.01 250 / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .glass-header,
+:root .glass-header {
+  background: oklch(0.98 0.005 250 / 0.7);
+}
+
+.glass-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+.glass-header__wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ---- Bento Grid ---- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.bento-grid > * {
+  min-width: 0;
+}
+
+/* The board spans 2 columns on desktop for visual dominance. */
+.bento-grid__board {
+  grid-column: span 2;
+}
+
+/* Full-width sections (load form, share, errors). */
+.bento-grid__full {
+  grid-column: 1 / -1;
+}
+
+/* Responsive: stack to single column on narrow viewports. */
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .bento-grid__board {
+    grid-column: 1 / -1;
+  }
+}
+
 /* ---- Scrollbar Styling ---- */
 ::-webkit-scrollbar {
   width: 8px;
