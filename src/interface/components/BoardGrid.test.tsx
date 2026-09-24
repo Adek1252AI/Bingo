@@ -12,27 +12,27 @@ const SAMPLE_GRID = [
 
 describe('getTextSizeClass', () => {
   it('returns large class for 1-4 char labels', () => {
-    expect(getTextSizeClass('Go')).toBe('text-lg sm:text-xl md:text-2xl');
-    expect(getTextSizeClass('FREE')).toBe('text-lg sm:text-xl md:text-2xl');
-    expect(getTextSizeClass('abcd')).toBe('text-lg sm:text-xl md:text-2xl');
+    expect(getTextSizeClass('Go')).toBe('text-base sm:text-lg');
+    expect(getTextSizeClass('FREE')).toBe('text-base sm:text-lg');
+    expect(getTextSizeClass('abcd')).toBe('text-base sm:text-lg');
   });
 
   it('returns medium class for 5-10 char labels', () => {
-    expect(getTextSizeClass('hello')).toBe('text-base sm:text-lg md:text-xl');
-    expect(getTextSizeClass('cherry')).toBe('text-base sm:text-lg md:text-xl');
-    expect(getTextSizeClass('abcdefghij')).toBe('text-base sm:text-lg md:text-xl');
+    expect(getTextSizeClass('hello')).toBe('text-xs sm:text-sm');
+    expect(getTextSizeClass('cherry')).toBe('text-xs sm:text-sm');
+    expect(getTextSizeClass('abcdefghij')).toBe('text-xs sm:text-sm');
   });
 
   it('returns small class for 11-20 char labels', () => {
-    expect(getTextSizeClass('strawberryy')).toBe('text-sm sm:text-base md:text-lg');
-    expect(getTextSizeClass('a'.repeat(11))).toBe('text-sm sm:text-base md:text-lg');
-    expect(getTextSizeClass('a'.repeat(20))).toBe('text-sm sm:text-base md:text-lg');
+    expect(getTextSizeClass('strawberryy')).toBe('text-[0.65rem] sm:text-xs');
+    expect(getTextSizeClass('a'.repeat(11))).toBe('text-[0.65rem] sm:text-xs');
+    expect(getTextSizeClass('a'.repeat(20))).toBe('text-[0.65rem] sm:text-xs');
   });
 
   it('returns extra-small class for 20+ char labels', () => {
-    expect(getTextSizeClass('a'.repeat(21))).toBe('text-xs sm:text-sm md:text-base');
+    expect(getTextSizeClass('a'.repeat(21))).toBe('text-[0.55rem] sm:text-[0.65rem]');
     expect(getTextSizeClass('Submit Application Form')).toBe(
-      'text-xs sm:text-sm md:text-base'
+      'text-[0.55rem] sm:text-[0.65rem]'
     );
   });
 
@@ -43,12 +43,10 @@ describe('getTextSizeClass', () => {
     const veryLong = getTextSizeClass('Submit Application Form');
 
     const scale = (cls: string) => {
-      if (cls.includes('text-2xl')) return 5;
-      if (cls.includes('xl')) return 4;
-      if (cls.includes('lg')) return 3;
-      if (cls.includes('text-base')) return 2;
-      if (cls.includes('text-sm')) return 1;
-      if (cls.includes('text-xs')) return 0;
+      if (cls.includes('text-base')) return 3;
+      if (cls.includes('text-sm')) return 2;
+      if (cls.includes('text-xs')) return 1;
+      if (cls.includes('0.55') || cls.includes('0.65')) return 0;
       return 0;
     };
 
@@ -232,20 +230,20 @@ describe('BoardGrid', () => {
           .filter((c) => /^text-(xs|sm|base|lg|xl|2xl)$/.test(c));
       });
 
-      expect(classesByText['fig']).toContain('text-lg');
-      expect(classesByText['kiwi']).toContain('text-lg');
-      expect(classesByText['elderberry']).toContain('text-base');
-      expect(classesByText['watermelon']).toContain('text-base');
-      expect(classesByText['strawberry']).toContain('text-base');
-      expect(classesByText['raspberry']).toContain('text-base');
-      expect(classesByText['nectarine']).toContain('text-base');
-      expect(classesByText['tangerine']).toContain('text-base');
+      expect(classesByText['fig']).toContain('text-base');
+      expect(classesByText['kiwi']).toContain('text-base');
+      expect(classesByText['elderberry']).toContain('text-xs');
+      expect(classesByText['watermelon']).toContain('text-xs');
+      expect(classesByText['strawberry']).toContain('text-xs');
+      expect(classesByText['raspberry']).toContain('text-xs');
+      expect(classesByText['nectarine']).toContain('text-xs');
+      expect(classesByText['tangerine']).toContain('text-xs');
     });
 
     it('free cell also uses responsive text sizing', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
-      expect(freeCell.className).toMatch(/text-lg/);
+      expect(freeCell.className).toMatch(/text-base/);
     });
   });
 

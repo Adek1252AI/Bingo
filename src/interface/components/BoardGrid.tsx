@@ -32,10 +32,10 @@ interface Props {
  */
 export function getTextSizeClass(text: string): string {
   const len = text.length;
-  if (len <= 4) return 'text-lg sm:text-xl md:text-2xl';
-  if (len <= 10) return 'text-base sm:text-lg md:text-xl';
-  if (len <= 20) return 'text-sm sm:text-base md:text-lg';
-  return 'text-xs sm:text-sm md:text-base';
+  if (len <= 4) return 'text-base sm:text-lg';
+  if (len <= 10) return 'text-xs sm:text-sm';
+  if (len <= 20) return 'text-[0.65rem] sm:text-xs';
+  return 'text-[0.55rem] sm:text-[0.65rem]';
 }
 
 const containerVariants: Variants = {
