@@ -231,6 +231,43 @@ describe('BoardGrid', () => {
     });
   });
 
+  describe('responsive text sizing', () => {
+    it('applies larger font class to shorter text and smaller class to longer text', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+
+      const allButtons = gridContainer.querySelectorAll('button');
+      const classesByText: Record<string, string[]> = {};
+      allButtons.forEach((btn) => {
+        const text = btn.textContent.trim();
+        classesByText[text] = btn.className
+          .split(' ')
+          .filter((c) => /^text-(xs|sm|base|lg|xl|2xl)$/.test(c));
+      });
+
+      // 4-char labels → text-lg
+      expect(classesByText['fig']).toContain('text-lg');
+      expect(classesByText['kiwi']).toContain('text-lg');
+
+      // 10-char labels → text-base
+      expect(classesByText['elderberry']).toContain('text-base');
+      expect(classesByText['watermelon']).toContain('text-base');
+      expect(classesByText['strawberry']).toContain('text-base');
+
+      // 9-char labels → text-base
+      expect(classesByText['raspberry']).toContain('text-base');
+      expect(classesByText['nectarine']).toContain('text-base');
+      expect(classesByText['tangerine']).toContain('text-base');
+    });
+
+    it('free cell also uses responsive text sizing', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const freeCell = container.querySelector('.italic')!;
+      // 'FREE' is 4 chars → text-lg tier
+      expect(freeCell.className).toMatch(/text-lg/);
+    });
+  });
+
   describe('win-line highlight', () => {
     it('adds the winning-cell class to cells on the completed line', () => {
       const { container } = render(

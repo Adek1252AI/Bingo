@@ -113,3 +113,32 @@ Strict mode catches null/undefined mistakes, unused variables, and implicit `any
 - Custom boards (user-provided words, localStorage)
 - AI-generated topic word lists (user says a movie → AI generates → user adjusts)
 - User-extendable topics (runtime mechanism for adding word lists)
+
+## Completion
+
+### UI Fix — t_7d7c6eb2 (Sep 2026)
+
+**What the original commits were supposed to do:**
+- `4c84f37` — Normalize button/cell sizes (fluid font, border-box, overflow handling), center the board via body flexbox (vertical + horizontal), and reorder board above controls using CSS `order` when the board is active. Added 9 new BoardGrid sizing tests.
+- `cb5a7b5` — Re-applied the same three fixes on top of the modern redesign (OKLCH + Tailwind + bento grid), with `hasBoard` state driving conditional reordering.
+- `39af9c8` — Merge of the fix branch into `master`.
+
+**What was found during investigation:**
+- CSS `order` does not work across different grid rows — the board and the topic controls live in separate grid rows inside `.bento-grid`, so `order` cannot visually reorder them.
+- Body-level `display: flex` centering (added in `cb5a7b5`) conflicted with the sticky page header, causing layout instability.
+- The board's cells needed explicit overflow handling and text truncation to keep uniform sizing under varying content lengths.
+
+**Was the merge correct?**
+Yes — the merge commit itself is clean. The problem was in the approach taken by the two fix commits, not in the merge. Both commits landed on `master` via the branch merge; the follow-up commit `abc3da5` corrected the approach.
+
+**Issues identified:**
+1. CSS `order` cannot reorder elements across separate grid rows.
+2. Body `display: flex` centering fights the sticky header.
+3. Buttons/cells had inconsistent sizing without explicit constraints.
+
+**What was fixed (`abc3da5`):**
+- Removed body `display: flex` centering; board is centered via `margin: auto` on `.bento-grid` (the body flex centering was removed, not the grid centering).
+- Reordered JSX directly so the board renders above the controls when active — replaces the broken CSS `order` approach.
+- Added `overflow: hidden` and text truncation to `BoardGrid` cells for consistent sizing.
+- Buttons sized consistently via the existing `AnimatedButton` component.
+- Build passes, 146/146 tests pass.
