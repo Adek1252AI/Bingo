@@ -101,11 +101,8 @@ export class LoadSharedBoardUseCase {
     if (!Array.isArray(words) || words.some(w => typeof w !== 'string' || w.length === 0)) {
       throw new Error('Invalid share link: the word list is missing or malformed.');
     }
-    if (words.length !== REQUIRED_WORD_COUNT) {
-      throw new Error(
-        `Invalid share link: expected ${REQUIRED_WORD_COUNT} words, got ${words.length}.`
-      );
-    }
+    // Word count and duplicate validation are delegated to validateBoard
+    // (domain rules) so there is a single source of truth for board validity.
     if (typeof seed !== 'string' || seed.length === 0) {
       throw new Error('Invalid share link: the seed is missing.');
     }

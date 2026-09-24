@@ -127,17 +127,17 @@ describe('LoadSharedBoardUseCase', () => {
 
     it('throws when words array is empty', () => {
       mockEncodingAdapter.decode.mockReturnValue({ words: [], seed: 'seed', topic: 'topic' });
-      expect(() => useCase.execute('valid-link')).toThrow(/expected 24 words, got 0/);
+      expect(() => useCase.execute('valid-link')).toThrow(/must have exactly 24 words, got 0/);
     });
 
     it('throws when words array has fewer than 24 items', () => {
       mockEncodingAdapter.decode.mockReturnValue({ words: words.slice(0, 20), seed: 'seed', topic: 'topic' });
-      expect(() => useCase.execute('valid-link')).toThrow(/expected 24 words, got 20/);
+      expect(() => useCase.execute('valid-link')).toThrow(/must have exactly 24 words, got 20/);
     });
 
     it('throws when words array has more than 24 items', () => {
       mockEncodingAdapter.decode.mockReturnValue({ words: [...words, 'extra'], seed: 'seed', topic: 'topic' });
-      expect(() => useCase.execute('valid-link')).toThrow(/expected 24 words, got 25/);
+      expect(() => useCase.execute('valid-link')).toThrow(/must have exactly 24 words, got 25/);
     });
 
     it('throws when a word is empty string', () => {
@@ -187,7 +187,7 @@ describe('LoadSharedBoardUseCase', () => {
     it('handles 24 valid words with various edge-case content', () => {
       const edgeWords = [' ', '!@#$%', 'word', '日本語', '"quotes"', "'apostrophe'",
         'new\nline', 'tab\there', 'unicode-🎉', 'path/with/slashes', 'spaces in middle',
-        '   ', 'a', 'word-with-dash', 'word_with_underscore', '123', 'true', 'false',
+        '  |  ', 'a', 'word-with-dash', 'word_with_underscore', '123', 'true', 'false',
         'null', 'undefined', 'camelCase', 'snake_case', 'kebab-case', 'LastOne'];
       mockEncodingAdapter.decode.mockReturnValue({ words: edgeWords, seed: 'seed', topic: 'topic' });
       const result = useCase.execute('valid-link');
