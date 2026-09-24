@@ -112,10 +112,10 @@ export default function BoardGrid({
                 const inner = isFree ? (
                   <div
                     className={cn(
-                      'aspect-square flex items-center justify-center',
+                      'aspect-square flex items-center justify-center px-1',
                       'rounded-lg border font-mono font-semibold',
                       'select-none overflow-hidden',
-                      'text-xs sm:text-sm md:text-base',
+                      'text-sm sm:text-base md:text-lg',
                       'bg-surface text-muted-foreground border-border',
                       'italic font-normal'
                     )}
@@ -133,10 +133,10 @@ export default function BoardGrid({
                     whileTap={{ scale: 0.94 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
                     className={cn(
-                      'aspect-square flex items-center justify-center gap-1',
+                      'aspect-square flex items-center justify-center gap-1 px-1',
                       'rounded-lg border font-mono font-semibold',
                       'transition-colors duration-150 select-none',
-                      'text-xs sm:text-sm md:text-base',
+                      'text-sm sm:text-base md:text-lg',
                       'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
@@ -156,11 +156,11 @@ export default function BoardGrid({
                         'shadow-md',
                       ],
 
-                      // Current cell — prominent with glow
+                      // Current cell — prominent with glow (same font size
+                      // as other cells; emphasis via color + ring + shadow)
                       isCurrent && [
                         'bg-primary text-primary-foreground border-primary',
                         'shadow-lg ring-2 ring-primary/50',
-                        'text-base sm:text-lg md:text-xl',
                       ],
 
                       // Winning cells — glow highlight (spec step 7)
@@ -173,7 +173,7 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    <span className="truncate">{cell}</span>
+                    <span className="break-words">{cell}</span>
                   </motion.button>
                 );
 
