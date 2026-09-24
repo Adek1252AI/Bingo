@@ -83,37 +83,41 @@ export default function HomePage() {
     setTopic(newTopic);
   };
 
+  const hasBoard = board && arrangement && !error;
+
   return (
     <main style={styles.main}>
-      <h1>Bingo</h1>
+      <h1 style={styles.heading}>Bingo</h1>
 
-      <TopicPicker
-        topics={wordPoolRepo.listTopics()}
-        selected={topic}
-        onSelect={handleTopicSelect}
-      />
+      <div style={hasBoard ? styles.controlsBelow : undefined}>
+        <TopicPicker
+          topics={wordPoolRepo.listTopics()}
+          selected={topic}
+          onSelect={handleTopicSelect}
+        />
 
-      <button onClick={handleGenerate} disabled={loading || !topic}>
-        {loading ? 'Generating...' : 'Generate Board'}
-      </button>
+        <button onClick={handleGenerate} disabled={loading || !topic}>
+          {loading ? 'Generating...' : 'Generate Board'}
+        </button>
 
-      {error && (
-        <div style={styles.errorBanner} role="alert">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div style={styles.errorBanner} role="alert">
+            {error}
+          </div>
+        )}
 
-      <LoadBoardForm
-        value={shareInput}
-        onChange={value => {
-          setShareInput(value);
-          setError(null);
-        }}
-        onLoad={() => handleLoadLink(shareInput)}
-      />
+        <LoadBoardForm
+          value={shareInput}
+          onChange={value => {
+            setShareInput(value);
+            setError(null);
+          }}
+          onLoad={() => handleLoadLink(shareInput)}
+        />
+      </div>
 
-      {board && arrangement && !error && (
-        <>
+      {hasBoard && (
+        <div style={styles.boardSection}>
           {loadedFromLink && loadedTopic && (
             <p style={styles.loadedNote}>
               Loaded shared board — topic: {loadedTopic}. Same words as your friend,
@@ -122,7 +126,7 @@ export default function HomePage() {
           )}
           <BoardGrid grid={arrangement} />
           {shareLink && <ShareLink encoded={shareLink} />}
-        </>
+        </div>
       )}
     </main>
   );
@@ -131,9 +135,21 @@ export default function HomePage() {
 const styles: Record<string, React.CSSProperties> = {
   main: {
     maxWidth: 640,
-    margin: '2rem auto',
+    width: '100%',
     fontFamily: 'system-ui, sans-serif',
-    padding: '0 1rem',
+    padding: '2rem 1rem',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  heading: {
+    marginBottom: '1rem',
+  },
+  boardSection: {
+    order: -1,
+    marginBottom: '1.5rem',
+  },
+  controlsBelow: {
+    order: 0,
   },
   loadedNote: {
     marginTop: '1rem',
