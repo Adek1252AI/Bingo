@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import BoardGrid from '@/interface/components/BoardGrid';
+import BoardGrid, { getTextSizeClass } from '@/interface/components/BoardGrid';
 
 const SAMPLE_GRID = [
   ['apple', 'banana', 'cherry', 'date', 'elderberry'],
@@ -9,6 +9,56 @@ const SAMPLE_GRID = [
   ['raspberry', 'strawberry', 'tangerine', 'ugli', 'vanilla'],
   ['watermelon', 'xigua', 'yam', 'zucchini', 'avocado'],
 ];
+
+describe('getTextSizeClass', () => {
+  it('returns large class for 1-4 char labels', () => {
+    expect(getTextSizeClass('Go')).toBe('text-lg sm:text-xl md:text-2xl');
+    expect(getTextSizeClass('FREE')).toBe('text-lg sm:text-xl md:text-2xl');
+    expect(getTextSizeClass('abcd')).toBe('text-lg sm:text-xl md:text-2xl');
+  });
+
+  it('returns medium class for 5-10 char labels', () => {
+    expect(getTextSizeClass('hello')).toBe('text-base sm:text-lg md:text-xl');
+    expect(getTextSizeClass('cherry')).toBe('text-base sm:text-lg md:text-xl');
+    expect(getTextSizeClass('abcdefghij')).toBe('text-base sm:text-lg md:text-xl');
+  });
+
+  it('returns small class for 11-20 char labels', () => {
+    expect(getTextSizeClass('strawberryy')).toBe('text-sm sm:text-base md:text-lg');
+    expect(getTextSizeClass('a'.repeat(11))).toBe('text-sm sm:text-base md:text-lg');
+    expect(getTextSizeClass('a'.repeat(20))).toBe('text-sm sm:text-base md:text-lg');
+  });
+
+  it('returns extra-small class for 20+ char labels', () => {
+    expect(getTextSizeClass('a'.repeat(21))).toBe('text-xs sm:text-sm md:text-base');
+    expect(getTextSizeClass('Submit Application Form')).toBe(
+      'text-xs sm:text-sm md:text-base'
+    );
+  });
+
+  it('monotonically decreases class size as text gets longer', () => {
+    // Pick strings in four distinct length buckets
+    const short = getTextSizeClass('Go');              // 2 chars  → largest
+    const medium = getTextSizeClass('cherry');          // 6 chars  → medium
+    const long = getTextSizeClass('strawberryy');       // 11 chars → small
+    const veryLong = getTextSizeClass('Submit Application Form'); // 25 chars → smallest
+
+    // Order by Tailwind scale: 2xl > xl > lg > base > sm > xs
+    const scale = (cls: string) => {
+      if (cls.includes('text-2xl')) return 5;
+      if (cls.includes('xl')) return 4;
+      if (cls.includes('lg')) return 3;
+      if (cls.includes('text-base')) return 2;
+      if (cls.includes('text-sm')) return 1;
+      if (cls.includes('text-xs')) return 0;
+      return 0;
+    };
+
+    expect(scale(short)).toBeGreaterThan(scale(medium));
+    expect(scale(medium)).toBeGreaterThan(scale(long));
+    expect(scale(long)).toBeGreaterThan(scale(veryLong));
+  });
+});
 
 describe('BoardGrid', () => {
   it('renders a 5x5 grid with all cells', () => {

@@ -27,6 +27,20 @@ interface Props {
   onCellToggle?: (word: string) => void;
 }
 
+/**
+ * Map cell content length to a responsive font-size class.
+ * Short text gets larger classes; long text shrinks to fit.
+ * The `sm:` / `md:` variants prevent overflow on smaller viewports
+ * while preserving the visual hierarchy between short and long labels.
+ */
+export function getTextSizeClass(text: string): string {
+  const len = text.length;
+  if (len <= 4) return 'text-lg sm:text-xl md:text-2xl';
+  if (len <= 10) return 'text-base sm:text-lg md:text-xl';
+  if (len <= 20) return 'text-sm sm:text-base md:text-lg';
+  return 'text-xs sm:text-sm md:text-base';
+}
+
 // Staggered entrance (spec step 6): cards fade in and slide up one by one
 // over 300ms each. 30ms between cards keeps the wave visible while landing
 // the whole 25-card board in about a second (snappy, per the spec's intent).
@@ -115,7 +129,7 @@ export default function BoardGrid({
                       'aspect-square flex items-center justify-center px-1',
                       'rounded-lg border font-mono font-semibold',
                       'select-none overflow-hidden',
-                      'text-sm sm:text-base md:text-lg',
+                      getTextSizeClass(cell),
                       'bg-surface text-muted-foreground border-border',
                       'italic font-normal'
                     )}
@@ -136,7 +150,7 @@ export default function BoardGrid({
                       'aspect-square flex items-center justify-center gap-1 px-1',
                       'rounded-lg border font-mono font-semibold',
                       'transition-colors duration-150 select-none',
-                      'text-sm sm:text-base md:text-lg',
+                      getTextSizeClass(cell),
                       'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
