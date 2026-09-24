@@ -127,6 +127,50 @@ describe('BoardGrid', () => {
     });
   });
 
+  describe('grid cell sizing (uniform board)', () => {
+    it('every cell button fills its grid cell (w-full aspect-square)', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      const buttons = gridContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(24);
+      // Without w-full, an aspect-square flex button shrink-to-fits to its
+      // text content — cells end up different sizes and misaligned.
+      buttons.forEach((btn) => {
+        expect(btn).toHaveClass('w-full');
+        expect(btn).toHaveClass('aspect-square');
+      });
+    });
+
+    it('the FREE cell fills its grid cell too', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const freeCell = container.querySelector('.italic')!;
+      expect(freeCell).toHaveClass('w-full');
+      expect(freeCell).toHaveClass('aspect-square');
+    });
+
+    it('grid items cannot blow out their tracks (min-w-0)', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      const items = gridContainer.querySelectorAll('[data-cell-index]');
+      expect(items.length).toBe(25);
+      items.forEach((item) => {
+        expect(item).toHaveClass('min-w-0');
+      });
+    });
+    it('cell text wraps instead of clipping (min-w-0 break-words)', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      const spans = gridContainer.querySelectorAll('button span');
+      expect(spans.length).toBe(24);
+      // Without min-w-0 the flex-child span cannot shrink below its text
+      // width, so long words clip instead of wrapping.
+      spans.forEach((span) => {
+        expect(span).toHaveClass('min-w-0');
+        expect(span).toHaveClass('break-words');
+      });
+    });
+  });
+
   describe('win-line highlight', () => {
     it('adds the winning-cell class to cells on the completed line', () => {
       const { container } = render(
