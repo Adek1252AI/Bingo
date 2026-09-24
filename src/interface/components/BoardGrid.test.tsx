@@ -206,14 +206,14 @@ describe('BoardGrid', () => {
       });
     });
 
-    it('cell text wraps instead of clipping (min-w-0 break-words)', () => {
+    it('cell text truncates instead of wrapping', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
       const spans = gridContainer.querySelectorAll('button span');
       expect(spans.length).toBe(24);
       spans.forEach((span) => {
-        expect(span).toHaveClass('min-w-0');
-        expect(span).toHaveClass('break-words');
+        expect(span).toHaveClass('truncate');
+        expect(span).toHaveClass('whitespace-nowrap');
       });
     });
   });

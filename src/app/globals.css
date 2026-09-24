@@ -213,12 +213,21 @@ html {
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image: url('/Bingo/spheres-bg.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.6;
   min-height: 100dvh;
+}
+
+[data-theme="dark"] body {
+  background-image: none;
 }
 
 /* ---- Typography Classes ---- */
@@ -316,38 +325,6 @@ body {
 }
 
 /* ---- Sphere Decorative Background ---- */
-/* Subtle glossy spheres behind the wordmark — matches logo motif */
-.sphere-motif {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.sphere-motif::before,
-.sphere-motif::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.06) 50%, transparent 70%);
-}
-
-.sphere-motif::before {
-  width: 180px;
-  height: 180px;
-  top: -40px;
-  left: 30%;
-  filter: blur(1px);
-}
-
-.sphere-motif::after {
-  width: 100px;
-  height: 100px;
-  top: 20px;
-  right: 10%;
-  filter: blur(0.5px);
-}
 
 /* ---- Bold Header ---- */
 .site-header {

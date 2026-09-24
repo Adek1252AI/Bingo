@@ -173,7 +173,7 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    <span className="min-w-0 break-words text-center">{cell}</span>
+                    <span className="truncate whitespace-nowrap">{cell}</span>
                   </motion.button>
                 );
 
