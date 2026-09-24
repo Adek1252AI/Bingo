@@ -92,7 +92,7 @@ export default function BoardGrid({
             data-board-key={entranceKey ?? 'board'}
             className={cn(
               'grid grid-cols-5 gap-2 sm:gap-3',
-              'mx-auto max-w-[400px]'
+              'mx-auto max-w-[600px]'
             )}
             variants={containerVariants}
             // Reduced motion: skip the stagger, render everything visible.

@@ -481,9 +481,9 @@ body {
   min-width: 0;
 }
 
-/* The board spans 2 columns on desktop for visual dominance. */
+/* The board spans full width so it centers across the entire page. */
 .bento-grid__board {
-  grid-column: span 2;
+  grid-column: 1 / -1;
 }
 
 /* Full-width sections (load form, share, errors). */
@@ -496,10 +496,6 @@ body {
   .bento-grid {
     grid-template-columns: 1fr;
     padding: 1rem;
-  }
-
-  .bento-grid__board {
-    grid-column: 1 / -1;
   }
 }
 
