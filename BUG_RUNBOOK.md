@@ -79,3 +79,46 @@ The "Loaded shared board" green message should appear once when a shared board i
 #### Notes
 The message is a confirmation of a past action (loading a shared board), not a live indicator. It should not be coupled to the topic selection state.
 
+---
+
+### Buttons / board render on the left instead of centered (t_b193245e)
+
+- **Status:** fixed
+- **Priority:** major
+- **Environment:** all browsers, static export build (`npm run build` + serve `out/`)
+- **Found by:** coder (kanban t_b193245e)
+- **When:** 2026-09-24
+
+#### What happens
+The 5x5 board (25 cell buttons) renders hugging the left edge of the page with ~275px of empty space on the right. Card and section padding appears collapsed (headings flush against card borders), and Tailwind spacing utilities (`mt-*`, `p-4`, `px-*`) have no visible effect.
+
+#### Expected behavior
+The board and all buttons center horizontally within the page container; utility padding/margins apply normally.
+
+#### How to reproduce (pre-fix)
+1. Build + serve the static export
+2. Pick a topic and click "Generate Board"
+3. Observe the board grid on the left half of the page
+
+#### Root cause
+`src/app/globals.css` declared an unlayered universal reset:
+
+```css
+* { box-sizing: border-box; margin: 0; padding: 0; }
+```
+
+In the CSS cascade, **unlayered rules beat every `@layer` rule regardless of specificity**. This reset silently defeated all Tailwind utilities in `@layer utilities`: `mx-auto` on the board grid computed to `0px` (so `max-w-[600px]` + `mx-auto` never centered it), and `p-4`/`px-4`/`mt-*` were zeroed site-wide. Tailwind v4's preflight (via `@import "tailwindcss"`) already provides the identical reset inside `@layer base`, where utilities can override it.
+
+#### Fix
+Removed the unlayered `*` reset from `src/app/globals.css` (globals.css:288). Tailwind v4 preflight provides the standard reset inside `@layer base`, correctly layered so `@layer utilities` wins.
+
+#### Verification
+- New regression tests: `src/app/globals.test.ts` (no universal selector reset, no unlayered margin/padding zeroing, bento-grid centering anchor intact) and a BoardGrid centering-class guard in `src/interface/components/BoardGrid.test.tsx`.
+- Playwright viewport sweep (375/430/768/1272/1920px): board grid, cell buttons, and Generate button all center with offset 0 against the body content box; no horizontal overflow.
+- Win modal: dialog centered (offset 0), padding 32px, Play-again button centered within it.
+- Pixel analysis of screenshots: board spans 336–935px in a 1272px viewport, 336px margins both sides.
+- Full suite: 159/159 tests pass; `npm run build` passes.
+
+#### Notes
+The earlier "center the board" attempts (JSX reorder, `grid-column: 1 / -1`, `mx-auto` classes) were correct in intent but could never work while the unlayered reset outranked the utilities layer. Any future CSS added at the top level of globals.css must not reset margin/padding — guarded by `src/app/globals.test.ts`.
+

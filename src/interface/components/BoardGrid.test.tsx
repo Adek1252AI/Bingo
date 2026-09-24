@@ -191,6 +191,16 @@ describe('BoardGrid', () => {
       });
     });
 
+    it('centers the board within the page (mx-auto + max-width)', () => {
+      // The board grid is narrower than the page container; mx-auto +
+      // max-w keep it horizontally centered instead of hugging the left
+      // edge (t_b193245e regression guard).
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      expect(gridContainer).toHaveClass('mx-auto');
+      expect(gridContainer.className).toMatch(/max-w-\[/);
+    });
+
     it('the FREE cell fills its grid cell too', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const freeCell = container.querySelector('.italic')!;

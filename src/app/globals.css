@@ -288,11 +288,13 @@
 /* ==========================================================================
    Base Styles
    ========================================================================== */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* NOTE: no unlayered `* { margin: 0; padding: 0 }` reset here. Tailwind v4's
+   preflight (via @import "tailwindcss") already provides the identical reset
+   inside @layer base. A reset at the top level is UNLAYERED, and unlayered
+   CSS beats every @layer rule regardless of specificity — it silently
+   zeroed mx-auto (board rendered on the left instead of centered) and all
+   utility padding/margins (p-4 cards, px-4 buttons, mt-* spacing).
+   Guarded by src/app/globals.test.ts. */
 
 html {
   /* Smooth font rendering */
