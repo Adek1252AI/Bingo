@@ -1,12 +1,436 @@
+@import "tailwindcss";
 
+/* ==========================================================================
+   OKLCH Color System — Dark/Light Mode Tokens
+   ==========================================================================
+   All tokens defined as CSS custom properties. Light mode is the default
+   ([data-theme="light"] or no data-theme attribute). Dark mode activates
+   via [data-theme="dark"] on <html>.
+
+   OKLCH format: oklch(lightness chroma hue)
+   - Lightness: 0-1 (perceptually uniform)
+   - Chroma: 0+ (colorfulness; 0 = grayscale)
+   - Hue: 0-360 (color wheel position)
+   ========================================================================== */
+
+@theme {
+  /* ---- Brand / Primary ---- */
+  --color-brand-50: oklch(0.97 0.02 250);
+  --color-brand-100: oklch(0.93 0.05 250);
+  --color-brand-200: oklch(0.86 0.10 250);
+  --color-brand-300: oklch(0.76 0.15 250);
+  --color-brand-400: oklch(0.66 0.20 250);
+  --color-brand-500: oklch(0.55 0.22 250);
+  --color-brand-600: oklch(0.47 0.22 250);
+  --color-brand-700: oklch(0.39 0.19 250);
+  --color-brand-800: oklch(0.32 0.15 250);
+  --color-brand-900: oklch(0.26 0.11 250);
+  --color-brand-950: oklch(0.18 0.07 250);
+
+  /* ---- Accent / Secondary ---- */
+  --color-accent-50: oklch(0.97 0.03 180);
+  --color-accent-100: oklch(0.93 0.07 180);
+  --color-accent-200: oklch(0.86 0.13 180);
+  --color-accent-300: oklch(0.76 0.18 180);
+  --color-accent-400: oklch(0.66 0.22 180);
+  --color-accent-500: oklch(0.55 0.23 180);
+  --color-accent-600: oklch(0.47 0.22 180);
+  --color-accent-700: oklch(0.39 0.18 180);
+  --color-accent-800: oklch(0.32 0.14 180);
+  --color-accent-900: oklch(0.26 0.10 180);
+  --color-accent-950: oklch(0.18 0.06 180);
+
+  /* ---- Neutral (grayscale) ---- */
+  --color-neutral-50: oklch(0.98 0.005 250);
+  --color-neutral-100: oklch(0.95 0.005 250);
+  --color-neutral-200: oklch(0.90 0.005 250);
+  --color-neutral-300: oklch(0.82 0.005 250);
+  --color-neutral-400: oklch(0.68 0.005 250);
+  --color-neutral-500: oklch(0.54 0.005 250);
+  --color-neutral-600: oklch(0.45 0.005 250);
+  --color-neutral-700: oklch(0.37 0.005 250);
+  --color-neutral-800: oklch(0.28 0.005 250);
+  --color-neutral-900: oklch(0.20 0.005 250);
+  --color-neutral-950: oklch(0.12 0.005 250);
+
+  /* ---- Semantic: Success ---- */
+  --color-success-50: oklch(0.97 0.04 145);
+  --color-success-100: oklch(0.93 0.08 145);
+  --color-success-200: oklch(0.86 0.14 145);
+  --color-success-300: oklch(0.76 0.19 145);
+  --color-success-400: oklch(0.66 0.23 145);
+  --color-success-500: oklch(0.55 0.24 145);
+  --color-success-600: oklch(0.47 0.22 145);
+  --color-success-700: oklch(0.39 0.17 145);
+  --color-success-800: oklch(0.32 0.13 145);
+  --color-success-900: oklch(0.26 0.09 145);
+  --color-success-950: oklch(0.18 0.05 145);
+
+  /* ---- Semantic: Warning ---- */
+  --color-warning-50: oklch(0.97 0.05 85);
+  --color-warning-100: oklch(0.93 0.10 85);
+  --color-warning-200: oklch(0.86 0.16 85);
+  --color-warning-300: oklch(0.76 0.21 85);
+  --color-warning-400: oklch(0.66 0.24 85);
+  --color-warning-500: oklch(0.55 0.25 85);
+  --color-warning-600: oklch(0.47 0.23 85);
+  --color-warning-700: oklch(0.39 0.18 85);
+  --color-warning-800: oklch(0.32 0.13 85);
+  --color-warning-900: oklch(0.26 0.09 85);
+  --color-warning-950: oklch(0.18 0.05 85);
+
+  /* ---- Semantic: Error / Destructive ---- */
+  --color-error-50: oklch(0.97 0.04 25);
+  --color-error-100: oklch(0.93 0.08 25);
+  --color-error-200: oklch(0.86 0.15 25);
+  --color-error-300: oklch(0.76 0.20 25);
+  --color-error-400: oklch(0.66 0.24 25);
+  --color-error-500: oklch(0.55 0.25 25);
+  --color-error-600: oklch(0.47 0.23 25);
+  --color-error-700: oklch(0.39 0.18 25);
+  --color-error-800: oklch(0.32 0.13 25);
+  --color-error-900: oklch(0.26 0.09 25);
+  --color-error-950: oklch(0.18 0.05 25);
+
+  /* ---- Typography: Font Families ---- */
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", monospace;
+
+  /* ---- Typography: Fluid Type Scale ---- */
+  /* clamp(min, preferred, max) — scales smoothly between viewport widths */
+  --text-xs: clamp(0.64rem, 0.60rem + 0.20vw, 0.75rem);
+  --text-sm: clamp(0.80rem, 0.75rem + 0.25vw, 0.875rem);
+  --text-base: clamp(1.00rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.20rem, 1.10rem + 0.50vw, 1.375rem);
+  --text-xl: clamp(1.50rem, 1.30rem + 1.00vw, 1.875rem);
+  --text-2xl: clamp(1.875rem, 1.50rem + 1.875vw, 2.5rem);
+  --text-3xl: clamp(2.25rem, 1.75rem + 2.50vw, 3.5rem);
+  --text-4xl: clamp(3.00rem, 2.25rem + 3.75vw, 5rem);
+  --text-5xl: clamp(3.75rem, 2.75rem + 5.00vw, 6.5rem);
+
+  /* ---- Spacing (4px base unit) ---- */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+
+  /* ---- Border Radius ---- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.1);
+
+  /* ---- Z-Index Scale ---- */
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-toast: 50;
+}
+
+/* ==========================================================================
+   Light Mode (default)
+   ========================================================================== */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --background: var(--color-neutral-50);
+  --foreground: var(--color-neutral-950);
+  --card: #ffffff;
+  --card-foreground: var(--color-neutral-950);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-neutral-950);
+  --primary: var(--color-brand-600);
+  --primary-foreground: var(--color-neutral-50);
+  --secondary: var(--color-neutral-100);
+  --secondary-foreground: var(--color-neutral-900);
+  --muted: var(--color-neutral-100);
+  --muted-foreground: var(--color-neutral-500);
+  --accent: var(--color-accent-500);
+  --accent-foreground: var(--color-neutral-950);
+  --destructive: var(--color-error-500);
+  --destructive-foreground: var(--color-neutral-50);
+  --border: var(--color-neutral-200);
+  --input: var(--color-neutral-200);
+  --ring: var(--color-brand-500);
+  --surface: var(--color-neutral-100);
+  --surface-foreground: var(--color-neutral-900);
+}
+
+/* ==========================================================================
+   Dark Mode
+   ========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: var(--color-neutral-950);
+  --foreground: var(--color-neutral-50);
+  --card: var(--color-neutral-900);
+  --card-foreground: var(--color-neutral-50);
+  --popover: var(--color-neutral-900);
+  --popover-foreground: var(--color-neutral-50);
+  --primary: var(--color-brand-400);
+  --primary-foreground: var(--color-neutral-950);
+  --secondary: var(--color-neutral-800);
+  --secondary-foreground: var(--color-neutral-100);
+  --muted: var(--color-neutral-800);
+  --muted-foreground: var(--color-neutral-400);
+  --accent: var(--color-accent-400);
+  --accent-foreground: var(--color-neutral-950);
+  --destructive: var(--color-error-400);
+  --destructive-foreground: var(--color-neutral-50);
+  --border: var(--color-neutral-700);
+  --input: var(--color-neutral-700);
+  --ring: var(--color-brand-400);
+  --surface: var(--color-neutral-800);
+  --surface-foreground: var(--color-neutral-100);
+}
+
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  /* Smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* Prevent layout shift on scrollbar appearance */
+  scrollbar-gutter: stable;
+
+  /* Respect user's motion preferences */
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
-  background: #fafafa;
-  color: #111;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+/* ---- Typography Classes ---- */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Display Headings ---- */
+.heading-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  line-height: 1.0;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.heading-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.heading-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: 1.1;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.heading-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xl);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.heading-h4 {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+/* ---- Body Text ---- */
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+.text-body-sm {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
   line-height: 1.5;
+}
+
+.text-caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--muted-foreground);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Focus States ---- */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* ---- Wordmark Gradient ---- */
+/* The single allowed polish item: gradient text on the Bingo wordmark. */
+.wordmark-gradient {
+  background: linear-gradient(135deg, var(--accent), oklch(0.7 0.25 340));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Glassmorphic Header ---- */
+.glass-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: oklch(0.20 0.01 250 / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .glass-header,
+:root .glass-header {
+  background: oklch(0.98 0.005 250 / 0.7);
+}
+
+.glass-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+
+.glass-header__wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ---- Bento Grid ---- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.bento-grid > * {
+  min-width: 0;
+}
+
+/* The board spans 2 columns on desktop for visual dominance. */
+.bento-grid__board {
+  grid-column: span 2;
+}
+
+/* Full-width sections (load form, share, errors). */
+.bento-grid__full {
+  grid-column: 1 / -1;
+}
+
+/* Responsive: stack to single column on narrow viewports. */
+@media (max-width: 768px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .bento-grid__board {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- Scrollbar Styling ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }

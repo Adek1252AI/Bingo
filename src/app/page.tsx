@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Shell from '@/interface/components/Shell';
 import TopicPicker from '@/interface/components/TopicPicker';
 import BoardGrid from '@/interface/components/BoardGrid';
 import ShareLink from '@/interface/components/ShareLink';
@@ -84,36 +85,52 @@ export default function HomePage() {
   };
 
   return (
-    <main style={styles.main}>
-      <h1>Bingo</h1>
+    <Shell>
+      {/* Topic picker — full width in bento grid */}
+      <div className="bento-grid__full" style={styles.tile}>
+        <TopicPicker
+          topics={wordPoolRepo.listTopics()}
+          selected={topic}
+          onSelect={handleTopicSelect}
+        />
+      </div>
 
-      <TopicPicker
-        topics={wordPoolRepo.listTopics()}
-        selected={topic}
-        onSelect={handleTopicSelect}
-      />
+      {/* Generate button — full width */}
+      <div className="bento-grid__full" style={{ padding: '0 0.5rem' }}>
+        <button
+          onClick={handleGenerate}
+          disabled={loading || !topic}
+          style={{
+            ...styles.button,
+            ...(loading || !topic ? styles.buttonDisabled : {}),
+          }}
+        >
+          {loading ? 'Generating...' : 'Generate Board'}
+        </button>
+      </div>
 
-      <button onClick={handleGenerate} disabled={loading || !topic}>
-        {loading ? 'Generating...' : 'Generate Board'}
-      </button>
-
+      {/* Error banner — full width */}
       {error && (
-        <div style={styles.errorBanner} role="alert">
-          {error}
+        <div className="bento-grid__full" role="alert" style={{ padding: '0 0.5rem' }}>
+          <div style={styles.errorBanner}>{error}</div>
         </div>
       )}
 
-      <LoadBoardForm
-        value={shareInput}
-        onChange={value => {
-          setShareInput(value);
-          setError(null);
-        }}
-        onLoad={() => handleLoadLink(shareInput)}
-      />
+      {/* Load form — full width */}
+      <div className="bento-grid__full" style={styles.tile}>
+        <LoadBoardForm
+          value={shareInput}
+          onChange={value => {
+            setShareInput(value);
+            setError(null);
+          }}
+          onLoad={() => handleLoadLink(shareInput)}
+        />
+      </div>
 
+      {/* Board + share — featured tile spans 2 columns */}
       {board && arrangement && !error && (
-        <>
+        <div className="bento-grid__board">
           {loadedFromLink && loadedTopic && (
             <p style={styles.loadedNote}>
               Loaded shared board — topic: {loadedTopic}. Same words as your friend,
@@ -122,31 +139,44 @@ export default function HomePage() {
           )}
           <BoardGrid grid={arrangement} />
           {shareLink && <ShareLink encoded={shareLink} />}
-        </>
+        </div>
       )}
-    </main>
+    </Shell>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  main: {
-    maxWidth: 640,
-    margin: '2rem auto',
-    fontFamily: 'system-ui, sans-serif',
-    padding: '0 1rem',
+  tile: {
+    padding: '0 0.5rem',
+  },
+  button: {
+    width: '100%',
+    padding: '0.75rem 1.5rem',
+    background: 'var(--primary)',
+    color: 'var(--primary-foreground)',
+    border: 'none',
+    borderRadius: 'var(--radius-lg)',
+    fontFamily: 'var(--font-sans)',
+    fontSize: 'var(--text-sm)',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'background 150ms ease, transform 150ms ease',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+    cursor: 'not-allowed',
   },
   loadedNote: {
     marginTop: '1rem',
     fontSize: '0.9rem',
-    color: '#2a6a2a',
+    color: 'oklch(0.66 0.23 145)',
   },
   errorBanner: {
     marginTop: '1rem',
     padding: '0.75rem 1rem',
-    background: '#fff0f0',
-    border: '1px solid #e0b4b4',
-    borderRadius: 6,
-    color: '#b00020',
+    background: 'var(--destructive)',
+    color: 'var(--destructive-foreground)',
+    borderRadius: 'var(--radius-md)',
     fontSize: '0.9rem',
   },
 };
