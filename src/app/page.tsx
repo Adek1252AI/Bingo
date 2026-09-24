@@ -147,11 +147,31 @@ export default function HomePage() {
 
   return (
     <Shell>
-      {/* Controls section — moves below board when board is active */}
-      <div
-        className="bento-grid__full"
-        style={hasBoard ? styles.controlsBelow : undefined}
-      >
+      {/* Board + share — rendered above controls when active.
+          JSX order is used instead of CSS `order` because `order`
+          only re-flows items within the same grid row, and the board
+          (span 2) and controls (full-width) land in different rows. */}
+      {hasBoard && (
+        <div className="bento-grid__board">
+          {loadedFromLink && loadedTopic && (
+            <p style={styles.loadedNote}>
+              Loaded shared board — topic: {loadedTopic}. Same words as your friend,
+              your own cell arrangement.
+            </p>
+          )}
+          <BoardGrid
+            grid={arrangement}
+            called={daubed}
+            entranceKey={`board-${boardCount}`}
+            winningCells={winningCells}
+            onCellToggle={handleCellToggle}
+          />
+          {shareLink && <ShareLink encoded={shareLink} />}
+        </div>
+      )}
+
+      {/* Controls section */}
+      <div className="bento-grid__full">
         <div className="bento-grid__full" style={styles.tile}>
           <TopicPicker
             topics={wordPoolRepo.listTopics()}
@@ -194,25 +214,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Board + share — appears above controls when active */}
-      {hasBoard && (
-        <div className="bento-grid__board" style={styles.boardSection}>
-          {loadedFromLink && loadedTopic && (
-            <p style={styles.loadedNote}>
-              Loaded shared board — topic: {loadedTopic}. Same words as your friend,
-              your own cell arrangement.
-            </p>
-          )}
-          <BoardGrid
-            grid={arrangement}
-            called={daubed}
-            entranceKey={`board-${boardCount}`}
-            winningCells={winningCells}
-            onCellToggle={handleCellToggle}
-          />
-          {shareLink && <ShareLink encoded={shareLink} />}
-        </div>
-      )}
       {/* BINGO! win celebration — confetti + modal */}
       <WinCelebration
         open={celebrating}
@@ -256,11 +257,5 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--destructive-foreground)',
     borderRadius: 'var(--radius-md)',
     fontSize: '0.9rem',
-  },
-  boardSection: {
-    order: -1,
-  },
-  controlsBelow: {
-    order: 1,
   },
 };

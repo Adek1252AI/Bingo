@@ -320,9 +320,8 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* No flex/centering — conflicts with sticky header and bento-grid
+     centering. Layout centers via margin:auto on .bento-grid instead. */
 }
 
 /* ---- Typography Classes ---- */

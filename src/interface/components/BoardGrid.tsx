@@ -114,7 +114,7 @@ export default function BoardGrid({
                     className={cn(
                       'aspect-square flex items-center justify-center',
                       'rounded-lg border font-mono font-semibold',
-                      'select-none',
+                      'select-none overflow-hidden',
                       'text-xs sm:text-sm md:text-base',
                       'bg-surface text-muted-foreground border-border',
                       'italic font-normal'
@@ -137,6 +137,7 @@ export default function BoardGrid({
                       'rounded-lg border font-mono font-semibold',
                       'transition-colors duration-150 select-none',
                       'text-xs sm:text-sm md:text-base',
+                      'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
                       'focus-visible:ring-offset-surface-elevated',
@@ -172,7 +173,7 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    <span>{cell}</span>
+                    <span className="truncate">{cell}</span>
                   </motion.button>
                 );
 
