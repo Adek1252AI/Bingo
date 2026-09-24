@@ -143,53 +143,60 @@ export default function HomePage() {
     setTopic(newTopic);
   };
 
+  const hasBoard = board && arrangement && !error;
+
   return (
     <Shell>
-      {/* Topic picker — full width in bento grid */}
-      <div className="bento-grid__full" style={styles.tile}>
-        <TopicPicker
-          topics={wordPoolRepo.listTopics()}
-          selected={topic}
-          onSelect={handleTopicSelect}
-        />
-      </div>
-
-      {/* Generate button — full width */}
-      <div className="bento-grid__full" style={{ padding: '0 0.5rem' }}>
-        <AnimatedButton
-          onClick={handleGenerate}
-          disabled={loading || !topic}
-          style={{
-            ...styles.button,
-            ...(loading || !topic ? styles.buttonDisabled : {}),
-          }}
-        >
-          {loading ? 'Generating...' : 'Generate Board'}
-        </AnimatedButton>
-      </div>
-
-      {/* Error banner — full width */}
-      {error && (
-        <div className="bento-grid__full" role="alert" style={{ padding: '0 0.5rem' }}>
-          <div style={styles.errorBanner}>{error}</div>
+      {/* Controls section — moves below board when board is active */}
+      <div
+        className="bento-grid__full"
+        style={hasBoard ? styles.controlsBelow : undefined}
+      >
+        <div className="bento-grid__full" style={styles.tile}>
+          <TopicPicker
+            topics={wordPoolRepo.listTopics()}
+            selected={topic}
+            onSelect={handleTopicSelect}
+          />
         </div>
-      )}
 
-      {/* Load form — full width */}
-      <div className="bento-grid__full" style={styles.tile}>
-        <LoadBoardForm
-          value={shareInput}
-          onChange={value => {
-            setShareInput(value);
-            setError(null);
-          }}
-          onLoad={() => handleLoadLink(shareInput)}
-        />
+        {/* Generate button — full width */}
+        <div style={{ padding: '0 0.5rem' }}>
+          <AnimatedButton
+            onClick={handleGenerate}
+            disabled={loading || !topic}
+            style={{
+              ...styles.button,
+              ...(loading || !topic ? styles.buttonDisabled : {}),
+            }}
+          >
+            {loading ? 'Generating...' : 'Generate Board'}
+          </AnimatedButton>
+        </div>
+
+        {/* Error banner — full width */}
+        {error && (
+          <div role="alert" style={{ padding: '0 0.5rem' }}>
+            <div style={styles.errorBanner}>{error}</div>
+          </div>
+        )}
+
+        {/* Load form — full width */}
+        <div style={styles.tile}>
+          <LoadBoardForm
+            value={shareInput}
+            onChange={value => {
+              setShareInput(value);
+              setError(null);
+            }}
+            onLoad={() => handleLoadLink(shareInput)}
+          />
+        </div>
       </div>
 
-      {/* Board + share — featured tile spans 2 columns */}
-      {board && arrangement && !error && (
-        <div className="bento-grid__board">
+      {/* Board + share — appears above controls when active */}
+      {hasBoard && (
+        <div className="bento-grid__board" style={styles.boardSection}>
           {loadedFromLink && loadedTopic && (
             <p style={styles.loadedNote}>
               Loaded shared board — topic: {loadedTopic}. Same words as your friend,
@@ -249,5 +256,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--destructive-foreground)',
     borderRadius: 'var(--radius-md)',
     fontSize: '0.9rem',
+  },
+  boardSection: {
+    order: -1,
+  },
+  controlsBelow: {
+    order: 1,
   },
 };

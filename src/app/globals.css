@@ -320,6 +320,9 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ---- Typography Classes ---- */
