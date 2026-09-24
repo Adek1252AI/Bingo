@@ -123,10 +123,13 @@ export default function BoardGrid({
 
                 // Inner element: a button when daubable, a plain div for the
                 // free cell (it can never be marked).
+                // Both fill their grid cell: `w-full aspect-square`. Without
+                // `w-full`, an aspect-square flex element shrink-to-fits to
+                // its text content, so every cell renders a different size.
                 const inner = isFree ? (
                   <div
                     className={cn(
-                      'aspect-square flex items-center justify-center px-1',
+                      'w-full aspect-square flex items-center justify-center px-1',
                       'rounded-lg border font-mono font-semibold',
                       'select-none overflow-hidden',
                       getTextSizeClass(cell),
@@ -147,7 +150,7 @@ export default function BoardGrid({
                     whileTap={{ scale: 0.94 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
                     className={cn(
-                      'aspect-square flex items-center justify-center gap-1 px-1',
+                      'w-full aspect-square flex items-center justify-center gap-1 px-1',
                       'rounded-lg border font-mono font-semibold',
                       'transition-colors duration-150 select-none',
                       getTextSizeClass(cell),
@@ -187,7 +190,11 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    <span className="break-words">{cell}</span>
+                    {/* min-w-0 lets the span shrink below its text width so
+                        break-words can actually wrap (flex children default
+                        to min-width:auto, which made long words clip instead
+                        of wrapping). text-center keeps wrapped lines centered. */}
+                    <span className="min-w-0 break-words text-center">{cell}</span>
                   </motion.button>
                 );
 
@@ -195,6 +202,10 @@ export default function BoardGrid({
                   <motion.div
                     key={`${r}-${c}`}
                     data-cell-index={index}
+                    // min-w-0: lets a long word truncate inside its track
+                    // instead of stretching the grid column (grid items are
+                    // min-width:auto by default).
+                    className="min-w-0"
                     variants={cellVariants}
                   >
                     {inner}
