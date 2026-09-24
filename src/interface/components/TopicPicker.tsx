@@ -35,9 +35,13 @@ export default function TopicPicker({ topics, selected, onSelect }: Props) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  fieldset: { border: '1px solid #ccc', padding: '0.75rem', borderRadius: 6 },
+  fieldset: {
+    border: '1px solid var(--border)',
+    padding: '0.75rem',
+    borderRadius: 6,
+  },
   list: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
   label: { display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' },
-  radio: { accentColor: '#0066cc' },
+  radio: { accentColor: 'var(--primary)' },
   text: { fontWeight: 500 },
 };

@@ -12,9 +12,17 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "canvas-confetti": "^1.9.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.2",
+    "lucide-react": "^0.469.0",
     "next": "^15.5.26",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
@@ -22,6 +30,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
