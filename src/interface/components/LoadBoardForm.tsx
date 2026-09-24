@@ -1,6 +1,8 @@
 
 'use client';
 
+import AnimatedButton from '@/interface/components/AnimatedButton';
+
 interface Props {
   value: string;
   onChange: (value: string) => void;
@@ -27,9 +29,9 @@ export default function LoadBoardForm({ value, onChange, onLoad }: Props) {
           }}
           style={styles.input}
         />
-        <button style={styles.button} onClick={onLoad}>
+        <AnimatedButton style={styles.button} onClick={onLoad}>
           Load
-        </button>
+        </AnimatedButton>
       </div>
     </section>
   );

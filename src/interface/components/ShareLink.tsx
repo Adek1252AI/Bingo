@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import AnimatedButton from '@/interface/components/AnimatedButton';
 
 interface Props {
   encoded: string;
@@ -99,13 +100,13 @@ export default function ShareLink({ encoded }: Props) {
         {/* aria-label keeps the accessible name stable ("Copy") even while the
             visible label flips to "Copied!" / "Copy failed", so screen readers
             and test locators keep finding the same button. */}
-        <button
+        <AnimatedButton
           style={status === 'copied' ? styles.copyBtnSuccess : status === 'failed' ? styles.copyBtnError : styles.copyBtn}
           onClick={handleCopy}
           aria-label="Copy"
         >
           {label}
-        </button>
+        </AnimatedButton>
       </div>
       <p style={styles.hint}>
         Paste the link into a new tab to load the shared board.

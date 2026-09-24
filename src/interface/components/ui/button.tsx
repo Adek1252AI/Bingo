@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/interface/lib/cn";
 
 const buttonVariants = cva(
@@ -41,12 +41,16 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, children, ...props }, ref) => {
+    // Respect prefers-reduced-motion: keep the visual color/opacity states
+    // but drop the transform animations.
+    const reduceMotion = useReducedMotion();
+
     return (
       <motion.button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        whileHover={{ y: -2, scale: 1.02 }}
-        whileTap={{ scale: 0.97 }}
+        whileHover={reduceMotion ? undefined : { y: -2, scale: 1.02 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.97 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
         {...props}
       >

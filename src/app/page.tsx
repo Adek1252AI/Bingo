@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TopicPicker from '@/interface/components/TopicPicker';
 import BoardGrid from '@/interface/components/BoardGrid';
 import ShareLink from '@/interface/components/ShareLink';
 import LoadBoardForm from '@/interface/components/LoadBoardForm';
+import WinCelebration from '@/interface/components/WinCelebration';
+import AnimatedButton from '@/interface/components/AnimatedButton';
 import { GenerateRandomBoardUseCase } from '@/application/useCases/GenerateRandomBoardUseCase';
 import { CreateShareLinkUseCase } from '@/application/useCases/CreateShareLinkUseCase';
 import { LoadSharedBoardUseCase, LoadSharedBoardResult } from '@/application/useCases/LoadSharedBoardUseCase';
 import { StaticWordPoolRepository } from '@/infrastructure/wordPool/StaticWordPoolRepository';
 import { JsonBase64EncodingAdapter } from '@/infrastructure/sharing/EncodingAdapter';
 import { DeterministicArrangementEngine } from '@/infrastructure/sharing/ArrangementEngine';
+import { checkBingo, countBingoLines, type Cell } from '@/domain/rules/bingo-rules';
 
 const wordPoolRepo = new StaticWordPoolRepository();
 const encodingAdapter = new JsonBase64EncodingAdapter();
@@ -30,6 +33,15 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [loadedFromLink, setLoadedFromLink] = useState(false);
   const [loadedTopic, setLoadedTopic] = useState<string | null>(null);
+
+  // Game state: words the player has marked (daubed) on their board, and the
+  // win celebration. entranceKey re-triggers the stagger animation per board.
+  const [daubed, setDaubed] = useState<string[]>([]);
+  const [celebrating, setCelebrating] = useState(false);
+  const [boardCount, setBoardCount] = useState(0);
+  // Guards the celebration: one burst per won board, re-armed on new board
+  // or when the player un-daubs out of the winning state.
+  const celebratedRef = useRef(false);
 
   // If the page is opened with a share link (#<payload> in the URL), load it
   // automatically. The fragment never reaches the server, so this works on
@@ -54,6 +66,12 @@ export default function HomePage() {
       setShareLink(link);
       setLoadedFromLink(false);
       setLoadedTopic(null);
+      // Fresh board: clear marks, re-arm the celebration, and re-trigger
+      // the entrance stagger.
+      setDaubed([]);
+      setCelebrating(false);
+      celebratedRef.current = false;
+      setBoardCount(count => count + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong while generating the board.');
     } finally {
@@ -72,10 +90,51 @@ export default function HomePage() {
       setShareLink(null);
       setLoadedFromLink(true);
       setLoadedTopic(result.topic);
+      // Fresh board: clear marks, re-arm the celebration, and re-trigger
+      // the entrance stagger.
+      setDaubed([]);
+      setCelebrating(false);
+      celebratedRef.current = false;
+      setBoardCount(count => count + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the shared board.');
     }
   };
+
+  /**
+   * Marks/unmarks a word on the player's board (daub). Uses the functional
+   * updater so rapid consecutive daubs (batched by React in one frame) all
+   * apply — a stale-closure read would silently drop all but the last.
+   */
+  const handleCellToggle = (word: string) => {
+    setDaubed(prev =>
+      prev.includes(word) ? prev.filter(w => w !== word) : [...prev, word]
+    );
+  };
+
+  // Win check on the derived marks. Celebrates only on the transition
+  // no-win -> win (celebratedRef guards re-firing on every later daub while
+  // the board is still winning); un-daubing out of a win re-arms it.
+  useEffect(() => {
+    const hasWin = arrangement
+      ? checkBingo(arrangement, daubed).length > 0
+      : false;
+    if (hasWin && !celebratedRef.current) {
+      celebratedRef.current = true;
+      setCelebrating(true);
+    }
+    if (!hasWin) {
+      celebratedRef.current = false;
+    }
+  }, [arrangement, daubed]);
+
+  /** Closes the win celebration; daubs stay so the board keeps its marks. */
+  const handleCelebrationClose = () => setCelebrating(false);
+
+  // Derived win state: which cells sit on a completed line, and how many
+  // lines completed. Empty/0 when there is no win.
+  const winningCells: Cell[] = arrangement ? checkBingo(arrangement, daubed) : [];
+  const winLineCount = arrangement ? countBingoLines(arrangement, daubed) : 0;
 
   /** Clears error when user picks a new topic. */
   const handleTopicSelect = (newTopic: string | null) => {
@@ -93,9 +152,16 @@ export default function HomePage() {
         onSelect={handleTopicSelect}
       />
 
-      <button onClick={handleGenerate} disabled={loading || !topic}>
+      <AnimatedButton
+        onClick={handleGenerate}
+        disabled={loading || !topic}
+        style={{
+          ...styles.button,
+          ...(loading || !topic ? styles.buttonDisabled : {}),
+        }}
+      >
         {loading ? 'Generating...' : 'Generate Board'}
-      </button>
+      </AnimatedButton>
 
       {error && (
         <div style={styles.errorBanner} role="alert">
@@ -120,10 +186,23 @@ export default function HomePage() {
               your own cell arrangement.
             </p>
           )}
-          <BoardGrid grid={arrangement} />
+          <BoardGrid
+            grid={arrangement}
+            called={daubed}
+            entranceKey={`board-${boardCount}`}
+            winningCells={winningCells}
+            onCellToggle={handleCellToggle}
+          />
           {shareLink && <ShareLink encoded={shareLink} />}
         </>
       )}
+
+      {/* BINGO! win celebration — confetti + modal */}
+      <WinCelebration
+        open={celebrating}
+        onClose={handleCelebrationClose}
+        lines={winLineCount}
+      />
     </main>
   );
 }
@@ -148,5 +227,21 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 6,
     color: '#b00020',
     fontSize: '0.9rem',
+  },
+  button: {
+    display: 'block',
+    margin: '1rem auto 0',
+    padding: '0.6rem 1.5rem',
+    background: '#0066cc',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 6,
+    cursor: 'pointer',
+    fontSize: '1rem',
+    fontWeight: 600,
+  },
+  buttonDisabled: {
+    background: '#9aa5b1',
+    cursor: 'not-allowed',
   },
 };

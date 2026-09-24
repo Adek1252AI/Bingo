@@ -3,8 +3,10 @@
 import * as React from 'react';
 import { Card, CardContent } from '@/interface/components/ui/card';
 import { Badge } from '@/interface/components/ui/badge';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { Check } from 'lucide-react';
 import { cn } from '@/interface/lib/cn';
+import type { Cell } from '@/domain/rules/bingo-rules';
 
 interface Props {
   grid: string[][];
@@ -14,9 +16,53 @@ interface Props {
   current?: string;
   /** Value used for the free (center) cell, defaults to 'FREE' */
   freeCell?: string;
+  /**
+   * Changing this key re-triggers the staggered entrance animation
+   * (e.g. pass the share link or a counter when a new board is generated).
+   */
+  entranceKey?: string;
+  /** Cells on a completed line — highlighted with a glow */
+  winningCells?: Cell[];
+  /** Called when the player taps/clicks a cell to mark (daub) it */
+  onCellToggle?: (word: string) => void;
 }
 
-export default function BoardGrid({ grid, called = [], current, freeCell = 'FREE' }: Props) {
+// Staggered entrance (spec step 6): cards fade in and slide up one by one
+// over 300ms each. 30ms between cards keeps the wave visible while landing
+// the whole 25-card board in about a second (snappy, per the spec's intent).
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.03,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cellVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+export default function BoardGrid({
+  grid,
+  called = [],
+  current,
+  freeCell = 'FREE',
+  entranceKey,
+  winningCells = [],
+  onCellToggle,
+}: Props) {
+  const reduceMotion = useReducedMotion();
+
+  const winningKeys = new Set(winningCells.map(([r, c]) => `${r}-${c}`));
+
   return (
     <div className="mt-6">
       <Card className="border-border bg-surface-elevated">
@@ -26,7 +72,7 @@ export default function BoardGrid({ grid, called = [], current, freeCell = 'FREE
           {/* Current number display */}
           {current && (
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={reduceMotion ? false : { scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               className="mb-4 flex justify-center"
@@ -40,69 +86,108 @@ export default function BoardGrid({ grid, called = [], current, freeCell = 'FREE
             </motion.div>
           )}
 
-          {/* 5x5 Grid */}
-          <div
+          {/* 5x5 Grid — staggered entrance, re-triggered by entranceKey */}
+          <motion.div
+            key={entranceKey ?? 'board'}
+            data-board-key={entranceKey ?? 'board'}
             className={cn(
               'grid grid-cols-5 gap-2 sm:gap-3',
               'mx-auto max-w-[400px]'
             )}
+            variants={containerVariants}
+            // Reduced motion: skip the stagger, render everything visible.
+            initial={reduceMotion ? false : 'hidden'}
+            animate="visible"
           >
             {grid.map((row, r) =>
               row.map((cell, c) => {
                 const isFree = cell === freeCell;
                 const isCalled = called.includes(cell);
                 const isCurrent = cell === current;
+                const isWinning = winningKeys.has(`${r}-${c}`);
+                const index = r * 5 + c;
+
+                // Inner element: a button when daubable, a plain div for the
+                // free cell (it can never be marked).
+                const inner = isFree ? (
+                  <div
+                    className={cn(
+                      'aspect-square flex items-center justify-center',
+                      'rounded-lg border font-mono font-semibold',
+                      'select-none',
+                      'text-xs sm:text-sm md:text-base',
+                      'bg-surface text-muted-foreground border-border',
+                      'italic font-normal'
+                    )}
+                  >
+                    {cell}
+                  </div>
+                ) : (
+                  <motion.button
+                    type="button"
+                    aria-pressed={isCalled}
+                    onClick={() => onCellToggle?.(cell)}
+                    // Micro-interaction (spec 5.1): lift on hover, press
+                    // feedback on tap.
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className={cn(
+                      'aspect-square flex items-center justify-center gap-1',
+                      'rounded-lg border font-mono font-semibold',
+                      'transition-colors duration-150 select-none',
+                      'text-xs sm:text-sm md:text-base',
+                      'focus-visible:outline-none focus-visible:ring-2',
+                      'focus-visible:ring-accent focus-visible:ring-offset-2',
+                      'focus-visible:ring-offset-surface-elevated',
+
+                      // Default (uncalled) cell
+                      !isCalled && !isCurrent && [
+                        'bg-surface-elevated text-text-primary',
+                        'border-border hover:border-border-hover',
+                        'hover:shadow-md',
+                      ],
+
+                      // Called cell — highlighted accent (+ check icon so
+                      // color is not the only signal, spec 5.2)
+                      isCalled && !isCurrent && [
+                        'bg-accent text-surface-base border-accent',
+                        'shadow-md',
+                      ],
+
+                      // Current cell — prominent with glow
+                      isCurrent && [
+                        'bg-primary text-primary-foreground border-primary',
+                        'shadow-lg ring-2 ring-primary/50',
+                        'text-base sm:text-lg md:text-xl',
+                      ],
+
+                      // Winning cells — glow highlight (spec step 7)
+                      isWinning && 'winning-cell ring-2 ring-accent shadow-glow'
+                    )}
+                  >
+                    {isCalled && !isCurrent && (
+                      <Check
+                        aria-hidden="true"
+                        className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
+                      />
+                    )}
+                    <span>{cell}</span>
+                  </motion.button>
+                );
 
                 return (
                   <motion.div
                     key={`${r}-${c}`}
-                    initial={isCurrent ? { scale: 1.1 } : { scale: 1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                    data-cell-index={index}
+                    variants={cellVariants}
                   >
-                    <div
-                      className={cn(
-                        // Base card cell styles
-                        'aspect-square flex items-center justify-center',
-                        'rounded-lg border font-mono font-semibold',
-                        'transition-all duration-150 select-none',
-                        // Responsive text sizing
-                        'text-xs sm:text-sm md:text-base',
-
-                        // Default (uncalled) cell
-                        !isFree && !isCalled && !isCurrent && [
-                          'bg-surface-elevated text-text-primary',
-                          'border-border hover:border-border-hover',
-                          'hover:shadow-md',
-                        ],
-
-                        // Called cell — highlighted accent
-                        isCalled && !isCurrent && [
-                          'bg-accent text-surface-base border-accent',
-                          'shadow-md',
-                        ],
-
-                        // Current cell — prominent with glow
-                        isCurrent && [
-                          'bg-primary text-primary-foreground border-primary',
-                          'shadow-lg ring-2 ring-primary/50',
-                          'text-base sm:text-lg md:text-xl',
-                        ],
-
-                        // Free cell — distinct styling
-                        isFree && [
-                          'bg-surface text-muted-foreground border-border',
-                          'italic font-normal',
-                        ]
-                      )}
-                    >
-                      {cell}
-                    </div>
+                    {inner}
                   </motion.div>
                 );
               })
             )}
-          </div>
+          </motion.div>
 
           {/* Legend */}
           <div className="mt-4 flex flex-wrap gap-3 justify-center text-xs text-muted-foreground">

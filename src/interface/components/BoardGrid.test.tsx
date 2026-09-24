@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import BoardGrid from '@/interface/components/BoardGrid';
 
 const SAMPLE_GRID = [
@@ -70,5 +70,81 @@ describe('BoardGrid', () => {
     // Free cell (distinct italic)
     const freeCell = container.querySelector('.italic');
     expect(freeCell).toBeTruthy();
+  });
+
+  describe('staggered entrance', () => {
+    it('marks each cell as a motion child with staggered animation order', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      const cells = gridContainer.querySelectorAll('[data-cell-index]');
+      // All 25 cells participate in the stagger
+      expect(cells.length).toBe(25);
+      // Cell order is encoded for the stagger delay
+      expect(cells[0]).toHaveAttribute('data-cell-index', '0');
+      expect(cells[24]).toHaveAttribute('data-cell-index', '24');
+    });
+
+    it('re-triggers the entrance when a new board key is provided', () => {
+      const { container, rerender } = render(
+        <BoardGrid grid={SAMPLE_GRID} entranceKey="board-1" />
+      );
+      const grid1 = container.querySelector('.grid-cols-5')!;
+      expect(grid1).toHaveAttribute('data-board-key', 'board-1');
+
+      rerender(<BoardGrid grid={SAMPLE_GRID} entranceKey="board-2" />);
+      const grid2 = container.querySelector('.grid-cols-5')!;
+      expect(grid2).toHaveAttribute('data-board-key', 'board-2');
+    });
+  });
+
+  describe('daub interaction', () => {
+    it('calls onCellToggle when a cell is clicked', () => {
+      const onCellToggle = vi.fn();
+      render(
+        <BoardGrid grid={SAMPLE_GRID} onCellToggle={onCellToggle} />
+      );
+      fireEvent.click(screen.getByText('apple'));
+      expect(onCellToggle).toHaveBeenCalledWith('apple');
+    });
+
+    it('does not call onCellToggle for the free cell', () => {
+      const onCellToggle = vi.fn();
+      render(
+        <BoardGrid grid={SAMPLE_GRID} onCellToggle={onCellToggle} />
+      );
+      fireEvent.click(screen.getByText('FREE'));
+      expect(onCellToggle).not.toHaveBeenCalled();
+    });
+
+    it('exposes daubed cells as buttons for keyboard access', () => {
+      const { container } = render(
+        <BoardGrid grid={SAMPLE_GRID} onCellToggle={() => {}} />
+      );
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      // All non-free cells are buttons; free cell is not
+      const buttons = gridContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(24);
+    });
+  });
+
+  describe('win-line highlight', () => {
+    it('adds the winning-cell class to cells on the completed line', () => {
+      const { container } = render(
+        <BoardGrid
+          grid={SAMPLE_GRID}
+          called={[]}
+          winningCells={[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]]}
+        />
+      );
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      const winning = gridContainer.querySelectorAll('.winning-cell');
+      expect(winning.length).toBe(5);
+    });
+
+    it('does not highlight cells when there is no win', () => {
+      const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
+      const gridContainer = container.querySelector('.grid-cols-5')!;
+      expect(gridContainer.querySelectorAll('.winning-cell').length).toBe(0);
+    });
   });
 });
