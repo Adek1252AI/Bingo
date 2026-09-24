@@ -27,28 +27,79 @@ function fireConfetti() {
   });
 }
 
+// Focusable elements inside the modal, in tab order.
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /**
  * BINGO! win celebration: a full-screen confetti burst plus a spring-in
  * modal announcing the win.
  *
  * The confetti fires once per open transition (not per render), and both
  * the burst and the modal animation respect prefers-reduced-motion.
+ *
+ * Accessibility (WCAG 2.4.3 / 2.1.2): when the modal opens, focus moves
+ * into it and is trapped until it closes; when it closes, focus returns to
+ * the element that had it before.
  */
 export default function WinCelebration({ open, onClose, lines }: Props) {
   const reduceMotion = useReducedMotion();
   const wasOpen = useRef(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
-  // Fire the confetti burst on the closed -> open transition only.
+  // Fire the confetti burst on the closed -> open transition only, and
+  // capture + move focus into the modal.
   useEffect(() => {
-    if (open && !wasOpen.current) fireConfetti();
+    if (open && !wasOpen.current) {
+      fireConfetti();
+      lastFocusedRef.current = document.activeElement as HTMLElement | null;
+      // Focus the first focusable element (the Play again button) once the
+      // modal has mounted.
+      requestAnimationFrame(() => {
+        const first = dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+        (first ?? dialogRef.current)?.focus();
+      });
+    }
     wasOpen.current = open;
   }, [open]);
 
-  // Escape closes the celebration.
+  // Restore focus to the trigger when the celebration closes.
+  useEffect(() => {
+    if (!open && lastFocusedRef.current) {
+      lastFocusedRef.current.focus?.();
+      lastFocusedRef.current = null;
+    }
+  }, [open]);
+
+  // Escape closes the celebration; Tab is trapped inside the modal
+  // (WCAG 2.1.2 — no keyboard escape from a modal except via its controls).
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusables = dialogRef.current
+          ? Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+          : [];
+        if (focusables.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && (active === first || active === dialogRef.current)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
@@ -72,10 +123,12 @@ export default function WinCelebration({ open, onClose, lines }: Props) {
           {/* Modal */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <motion.div
+              ref={dialogRef}
               role="dialog"
               aria-modal="true"
               aria-label="Bingo win"
-              className="w-full max-w-sm rounded-xl border border-border bg-surface-elevated p-8 text-center shadow-lg"
+              tabIndex={-1}
+              className="w-full max-w-sm rounded-xl border border-border bg-surface-elevated p-8 text-center shadow-lg outline-none"
               // Reduced motion: fade only — no spring scale transform.
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: 24 }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}

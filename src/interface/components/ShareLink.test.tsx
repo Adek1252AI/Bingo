@@ -111,8 +111,8 @@ describe('ShareLink', () => {
     await waitFor(() => {
       expect(copyButton).toHaveTextContent('Copy failed');
     });
-    // Error styling (red) so the failure is visibly distinct
-    expect(copyButton).toHaveStyle({ background: '#b3261e' });
+    // Error styling (destructive token) so the failure is visibly distinct
+    expect(copyButton).toHaveStyle({ background: 'var(--destructive)' });
     // Last-resort fallback: select the input so the user can copy manually.
     expect(selectSpy).toHaveBeenCalled();
     selectSpy.mockRestore();

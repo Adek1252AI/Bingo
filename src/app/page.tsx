@@ -240,7 +240,7 @@ const styles: Record<string, React.CSSProperties> = {
   loadedNote: {
     marginTop: '1rem',
     fontSize: '0.9rem',
-    color: 'oklch(0.66 0.23 145)',
+    color: 'var(--success-text)',
   },
   errorBanner: {
     marginTop: '1rem',

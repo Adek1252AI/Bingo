@@ -14,6 +14,20 @@ type CopyStatus = 'idle' | 'copied' | 'failed';
 // button reverts to its resting label.
 const FEEDBACK_MS = 2000;
 
+// Visually hidden but available to screen readers (WCAG 1.3.1 / 4.1.2):
+// the input gets a real accessible name, not just a value.
+const visuallyHidden: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+};
+
 // Fallback for browsers without the async Clipboard API (or where it is
 // blocked, e.g. non-secure contexts). Returns true when the copy succeeded.
 function copyViaExecCommand(text: string): boolean {
@@ -89,6 +103,9 @@ export default function ShareLink({ encoded }: Props) {
         Send this link to a friend — same words, different cells.
       </p>
       <div style={styles.linkRow}>
+        <label htmlFor="share-link" style={visuallyHidden}>
+          Shareable board link
+        </label>
         <input
           type="text"
           readOnly
@@ -116,21 +133,28 @@ export default function ShareLink({ encoded }: Props) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  wrapper: { marginTop: '1.5rem', padding: '1rem', background: '#f0f4ff', borderRadius: 8 },
-  note: { fontSize: '0.85rem', color: '#444', marginBottom: '0.5rem' },
+  wrapper: {
+    marginTop: '1.5rem',
+    padding: '1rem',
+    background: 'var(--surface)',
+    color: 'var(--surface-foreground)',
+    borderRadius: 8,
+  },
+  note: { fontSize: '0.85rem', color: 'var(--muted-foreground)', marginBottom: '0.5rem' },
   linkRow: { display: 'flex', gap: '0.5rem' },
   input: {
     flex: 1,
     padding: '0.4rem 0.6rem',
-    border: '1px solid #999',
+    border: '1px solid var(--input)',
     borderRadius: 4,
     fontSize: '0.85rem',
-    background: '#fff',
+    background: 'var(--surface-elevated)',
+    color: 'var(--text-primary)',
   },
   copyBtn: {
     padding: '0.4rem 0.8rem',
-    background: '#0066cc',
-    color: '#fff',
+    background: 'var(--primary)',
+    color: 'var(--primary-foreground)',
     border: 'none',
     borderRadius: 4,
     cursor: 'pointer',
@@ -138,8 +162,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   copyBtnSuccess: {
     padding: '0.4rem 0.8rem',
-    background: '#1a7f37',
-    color: '#fff',
+    background: 'var(--success-strong)',
+    color: 'var(--success-strong-foreground)',
     border: 'none',
     borderRadius: 4,
     cursor: 'pointer',
@@ -147,12 +171,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   copyBtnError: {
     padding: '0.4rem 0.8rem',
-    background: '#b3261e',
-    color: '#fff',
+    background: 'var(--destructive)',
+    color: 'var(--destructive-foreground)',
     border: 'none',
     borderRadius: 4,
     cursor: 'pointer',
     fontSize: '0.85rem',
   },
-  hint: { fontSize: '0.8rem', color: '#666', marginTop: '0.5rem' },
+  hint: { fontSize: '0.8rem', color: 'var(--muted-foreground)', marginTop: '0.5rem' },
 };

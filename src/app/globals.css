@@ -137,6 +137,8 @@
   --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.1);
+  /* Winning-cell glow (accent teal, visible on both light and dark). */
+  --shadow-glow: 0 0 0 3px oklch(0.66 0.22 180 / 0.35), 0 0 24px oklch(0.66 0.22 180 / 0.5);
 
   /* ---- Z-Index Scale ---- */
   --z-dropdown: 10;
@@ -144,6 +146,49 @@
   --z-overlay: 30;
   --z-modal: 40;
   --z-toast: 50;
+}
+
+/* ==========================================================================
+   Semantic Token -> Tailwind Utility Mapping
+   ==========================================================================
+   `@theme inline` makes Tailwind emit utilities that reference the semantic
+   custom properties directly (e.g. `.bg-accent { background: var(--accent) }`),
+   so every utility follows the light/dark redefinition below. Without this
+   block, classes like bg-accent / text-text-primary / ring-accent generate
+   NO CSS at all in Tailwind v4. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-surface-base: var(--surface-base);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-surface-hover: var(--surface-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-success-text: var(--success-text);
+  --color-success-strong: var(--success-strong);
+  --color-success-strong-foreground: var(--success-strong-foreground);
 }
 
 /* ==========================================================================
@@ -163,17 +208,37 @@
   --primary-foreground: var(--color-neutral-50);
   --secondary: var(--color-neutral-100);
   --secondary-foreground: var(--color-neutral-900);
+  /* WCAG 1.4.3: neutral-500 on neutral-100 (FREE cell, legend) is 4.37:1 —
+     neutral-600 keeps every muted-text pair >= 4.5:1. */
   --muted: var(--color-neutral-100);
-  --muted-foreground: var(--color-neutral-500);
-  --accent: var(--color-accent-500);
-  --accent-foreground: var(--color-neutral-950);
-  --destructive: var(--color-error-500);
+  --muted-foreground: var(--color-neutral-600);
+  /* WCAG 1.4.3: accent-500 with light text is 3.49:1 — accent-600 passes
+     (4.89:1) while staying in the teal family. */
+  --accent: var(--color-accent-600);
+  --accent-foreground: var(--color-neutral-50);
+  --accent-hover: var(--color-accent-700);
+  /* WCAG 1.4.3: error-500 with light text is 4.79:1 — fine, but 600 is
+     safer for small banner text; error-600 is 6.41:1. */
+  --destructive: var(--color-error-600);
   --destructive-foreground: var(--color-neutral-50);
-  --border: var(--color-neutral-200);
-  --input: var(--color-neutral-200);
+  /* WCAG 1.4.11 (non-text 3:1): neutral-200 is only 1.27:1 against the
+     page background — neutral-500 (4.78:1) makes borders and input
+     outlines clearly perceivable. */
+  --border: var(--color-neutral-500);
+  --border-hover: var(--color-neutral-600);
+  --input: var(--color-neutral-500);
   --ring: var(--color-brand-500);
   --surface: var(--color-neutral-100);
   --surface-foreground: var(--color-neutral-900);
+  --surface-base: var(--color-neutral-50);
+  --surface-elevated: #ffffff;
+  --surface-hover: var(--color-neutral-200);
+  --text-primary: var(--color-neutral-950);
+  --text-secondary: var(--color-neutral-700);
+  --text-tertiary: var(--color-neutral-600);
+  --success-text: var(--color-success-700);
+  --success-strong: var(--color-success-700);
+  --success-strong-foreground: var(--color-neutral-50);
 }
 
 /* ==========================================================================
@@ -196,13 +261,28 @@
   --muted-foreground: var(--color-neutral-400);
   --accent: var(--color-accent-400);
   --accent-foreground: var(--color-neutral-950);
-  --destructive: var(--color-error-400);
+  --accent-hover: var(--color-accent-500);
+  /* WCAG 1.4.3: error-400 with light text is 3.41:1 — error-500 passes
+     (4.79:1). */
+  --destructive: var(--color-error-500);
   --destructive-foreground: var(--color-neutral-50);
-  --border: var(--color-neutral-700);
-  --input: var(--color-neutral-700);
+  /* WCAG 1.4.11: neutral-700 is 1.74:1 against the card — neutral-500
+     (3.58:1) passes on every dark surface. */
+  --border: var(--color-neutral-500);
+  --border-hover: var(--color-neutral-400);
+  --input: var(--color-neutral-500);
   --ring: var(--color-brand-400);
   --surface: var(--color-neutral-800);
   --surface-foreground: var(--color-neutral-100);
+  --surface-base: var(--color-neutral-950);
+  --surface-elevated: var(--color-neutral-900);
+  --surface-hover: var(--color-neutral-700);
+  --text-primary: var(--color-neutral-50);
+  --text-secondary: var(--color-neutral-300);
+  --text-tertiary: var(--color-neutral-400);
+  --success-text: var(--color-success-300);
+  --success-strong: var(--color-success-300);
+  --success-strong-foreground: var(--color-neutral-950);
 }
 
 /* ==========================================================================
@@ -337,13 +417,16 @@ body {
 }
 
 /* ---- Wordmark Gradient ---- */
-/* The single allowed polish item: gradient text on the Bingo wordmark. */
+/* The single allowed polish item: gradient text on the Bingo wordmark.
+   Both gradient stops pass WCAG large-text contrast (>= 3:1) on the header
+   surface in light AND dark mode. */
 .wordmark-gradient {
-  background: linear-gradient(135deg, var(--accent), oklch(0.7 0.25 340));
+  background: linear-gradient(135deg, var(--accent), oklch(0.6 0.24 340));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+  text-decoration: none;
 }
 
 /* ---- Glassmorphic Header ---- */
@@ -351,15 +434,17 @@ body {
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: oklch(0.20 0.01 250 / 0.6);
+  background: oklch(0.98 0.005 250 / 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
 
-[data-theme="light"] .glass-header,
-:root .glass-header {
-  background: oklch(0.98 0.005 250 / 0.7);
+/* Dark override — must come after the base rule and match with higher
+   specificity than the light default so dark mode actually applies
+   (`:root .glass-header` would otherwise win for every theme). */
+[data-theme="dark"] .glass-header {
+  background: oklch(0.20 0.01 250 / 0.6);
 }
 
 .glass-header__inner {
