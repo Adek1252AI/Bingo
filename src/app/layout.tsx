@@ -2,12 +2,6 @@ import type { Metadata } from 'next';
 import { Bebas_Neue, Inter, JetBrains_Mono } from 'next/font/google';
 import '@/app/globals.css';
 
-/* ==========================================================================
-   Font Configuration
-   - Bebas Neue: Display/headings (loaded via CSS class .font-display)
-   - Inter: Body text (applied to body via variable)
-   - JetBrains Mono: Numbers/code (loaded via CSS class .font-mono)
-   ========================================================================== */
 const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
   weight: ['400'],
@@ -31,12 +25,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Bingo',
   description: 'Word-based bingo with topic boards and shared links',
+  icons: {
+    icon: '/Bingo/logo.png',
+  },
 };
 
-/**
- * Inline script to initialize theme before paint — prevents FOUC
- * when dark mode is active. Reads localStorage or prefers-color-scheme.
- */
 const themeInitScript = `
 (function() {
   try {
@@ -46,9 +39,7 @@ const themeInitScript = `
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
-  } catch (e) {
-    // localStorage unavailable — fall back to system preference
-  }
+  } catch (e) {}
 })();
 `;
 

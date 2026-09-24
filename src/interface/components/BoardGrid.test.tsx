@@ -37,13 +37,11 @@ describe('getTextSizeClass', () => {
   });
 
   it('monotonically decreases class size as text gets longer', () => {
-    // Pick strings in four distinct length buckets
-    const short = getTextSizeClass('Go');              // 2 chars  → largest
-    const medium = getTextSizeClass('cherry');          // 6 chars  → medium
-    const long = getTextSizeClass('strawberryy');       // 11 chars → small
-    const veryLong = getTextSizeClass('Submit Application Form'); // 25 chars → smallest
+    const short = getTextSizeClass('Go');
+    const medium = getTextSizeClass('cherry');
+    const long = getTextSizeClass('strawberryy');
+    const veryLong = getTextSizeClass('Submit Application Form');
 
-    // Order by Tailwind scale: 2xl > xl > lg > base > sm > xs
     const scale = (cls: string) => {
       if (cls.includes('text-2xl')) return 5;
       if (cls.includes('xl')) return 4;
@@ -73,28 +71,27 @@ describe('BoardGrid', () => {
     expect(screen.getByText('Your Board')).toBeTruthy();
   });
 
-  it('highlights called cells with accent background', () => {
+  it('highlights called cells with dark background', () => {
     const called = ['apple', 'cherry', 'mango'];
     const { container } = render(<BoardGrid grid={SAMPLE_GRID} called={called} />);
 
-    // Called cells should have the accent background class (scoped to grid, not badge)
     const gridContainer = container.querySelector('.grid-cols-5')!;
-    const calledElements = gridContainer.querySelectorAll('.bg-accent');
-    expect(calledElements.length).toBe(3);
+    const calledElements = gridContainer.querySelectorAll('.bg-neutral-900');
+    // 3 called cells + 1 FREE cell = 4
+    expect(calledElements.length).toBe(4);
   });
 
   it('displays the current number prominently with badge', () => {
     const current = 'cherry';
     render(<BoardGrid grid={SAMPLE_GRID} current={current} />);
 
-    // Current number appears in badge (outside the grid)
     const badges = screen.getAllByText(current);
     expect(badges.length).toBeGreaterThanOrEqual(1);
   });
 
   it('styles the free cell distinctly', () => {
     const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-    const freeCell = container.querySelector('.italic');
+    const freeCell = container.querySelector('.bg-neutral-900.text-white');
     expect(freeCell).toBeTruthy();
     expect(freeCell?.textContent).toBe('FREE');
   });
@@ -106,19 +103,18 @@ describe('BoardGrid', () => {
       <BoardGrid grid={SAMPLE_GRID} called={called} current={current} />
     );
 
-    // Scope to grid container to exclude the badge
     const gridContainer = container.querySelector('.grid-cols-5')!;
 
-    // Called cells (accent) — should be exactly 2
-    const calledElements = gridContainer.querySelectorAll('.bg-accent');
-    expect(calledElements.length).toBe(2);
+    // Called cells (dark) — should be 2 + 1 FREE cell = 3
+    const calledElements = gridContainer.querySelectorAll('.bg-neutral-900');
+    expect(calledElements.length).toBe(3);
 
-    // Current cell (primary) — should be exactly 1
-    const currentElements = gridContainer.querySelectorAll('.bg-primary');
+    // Current cell (lighter dark) — should be exactly 1
+    const currentElements = gridContainer.querySelectorAll('.bg-neutral-800');
     expect(currentElements.length).toBe(1);
 
-    // Free cell (distinct italic)
-    const freeCell = container.querySelector('.italic');
+    // Free cell (distinct dark)
+    const freeCell = container.querySelector('.bg-neutral-900.text-white');
     expect(freeCell).toBeTruthy();
   });
 
@@ -127,9 +123,7 @@ describe('BoardGrid', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
       const cells = gridContainer.querySelectorAll('[data-cell-index]');
-      // All 25 cells participate in the stagger
       expect(cells.length).toBe(25);
-      // Cell order is encoded for the stagger delay
       expect(cells[0]).toHaveAttribute('data-cell-index', '0');
       expect(cells[24]).toHaveAttribute('data-cell-index', '24');
     });
@@ -171,7 +165,6 @@ describe('BoardGrid', () => {
         <BoardGrid grid={SAMPLE_GRID} onCellToggle={() => {}} />
       );
       const gridContainer = container.querySelector('.grid-cols-5')!;
-      // All non-free cells are buttons; free cell is not
       const buttons = gridContainer.querySelectorAll('button');
       expect(buttons.length).toBe(24);
     });
@@ -183,8 +176,6 @@ describe('BoardGrid', () => {
       const gridContainer = container.querySelector('.grid-cols-5')!;
       const buttons = gridContainer.querySelectorAll('button');
       expect(buttons.length).toBe(24);
-      // Without w-full, an aspect-square flex button shrink-to-fits to its
-      // text content — cells end up different sizes and misaligned.
       buttons.forEach((btn) => {
         expect(btn).toHaveClass('w-full');
         expect(btn).toHaveClass('aspect-square');
@@ -192,9 +183,6 @@ describe('BoardGrid', () => {
     });
 
     it('centers the board within the page (mx-auto + max-width)', () => {
-      // The board grid is narrower than the page container; mx-auto +
-      // max-w keep it horizontally centered instead of hugging the left
-      // edge (t_b193245e regression guard).
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
       expect(gridContainer).toHaveClass('mx-auto');
@@ -203,7 +191,7 @@ describe('BoardGrid', () => {
 
     it('the FREE cell fills its grid cell too', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-      const freeCell = container.querySelector('.italic')!;
+      const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
       expect(freeCell).toHaveClass('w-full');
       expect(freeCell).toHaveClass('aspect-square');
     });
@@ -217,13 +205,12 @@ describe('BoardGrid', () => {
         expect(item).toHaveClass('min-w-0');
       });
     });
+
     it('cell text wraps instead of clipping (min-w-0 break-words)', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
       const spans = gridContainer.querySelectorAll('button span');
       expect(spans.length).toBe(24);
-      // Without min-w-0 the flex-child span cannot shrink below its text
-      // width, so long words clip instead of wrapping.
       spans.forEach((span) => {
         expect(span).toHaveClass('min-w-0');
         expect(span).toHaveClass('break-words');
@@ -245,16 +232,11 @@ describe('BoardGrid', () => {
           .filter((c) => /^text-(xs|sm|base|lg|xl|2xl)$/.test(c));
       });
 
-      // 4-char labels → text-lg
       expect(classesByText['fig']).toContain('text-lg');
       expect(classesByText['kiwi']).toContain('text-lg');
-
-      // 10-char labels → text-base
       expect(classesByText['elderberry']).toContain('text-base');
       expect(classesByText['watermelon']).toContain('text-base');
       expect(classesByText['strawberry']).toContain('text-base');
-
-      // 9-char labels → text-base
       expect(classesByText['raspberry']).toContain('text-base');
       expect(classesByText['nectarine']).toContain('text-base');
       expect(classesByText['tangerine']).toContain('text-base');
@@ -262,8 +244,7 @@ describe('BoardGrid', () => {
 
     it('free cell also uses responsive text sizing', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-      const freeCell = container.querySelector('.italic')!;
-      // 'FREE' is 4 chars → text-lg tier
+      const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
       expect(freeCell.className).toMatch(/text-lg/);
     });
   });

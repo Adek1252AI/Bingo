@@ -1,96 +1,26 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   OKLCH Color System — Dark/Light Mode Tokens
+   Monochromatic Color System — Dark/Light Mode Tokens
+   Matches the Bingo logo: bold black/white, high contrast, playful spheres.
    ==========================================================================
-   All tokens defined as CSS custom properties. Light mode is the default
-   ([data-theme="light"] or no data-theme attribute). Dark mode activates
-   via [data-theme="dark"] on <html>.
-
-   OKLCH format: oklch(lightness chroma hue)
-   - Lightness: 0-1 (perceptually uniform)
-   - Chroma: 0+ (colorfulness; 0 = grayscale)
-   - Hue: 0-360 (color wheel position)
+   Light mode (default): clean white background, bold black elements —
+   mirrors the logo directly. Dark mode inverts.
    ========================================================================== */
 
 @theme {
-  /* ---- Brand / Primary ---- */
-  --color-brand-50: oklch(0.97 0.02 250);
-  --color-brand-100: oklch(0.93 0.05 250);
-  --color-brand-200: oklch(0.86 0.10 250);
-  --color-brand-300: oklch(0.76 0.15 250);
-  --color-brand-400: oklch(0.66 0.20 250);
-  --color-brand-500: oklch(0.55 0.22 250);
-  --color-brand-600: oklch(0.47 0.22 250);
-  --color-brand-700: oklch(0.39 0.19 250);
-  --color-brand-800: oklch(0.32 0.15 250);
-  --color-brand-900: oklch(0.26 0.11 250);
-  --color-brand-950: oklch(0.18 0.07 250);
-
-  /* ---- Accent / Secondary ---- */
-  --color-accent-50: oklch(0.97 0.03 180);
-  --color-accent-100: oklch(0.93 0.07 180);
-  --color-accent-200: oklch(0.86 0.13 180);
-  --color-accent-300: oklch(0.76 0.18 180);
-  --color-accent-400: oklch(0.66 0.22 180);
-  --color-accent-500: oklch(0.55 0.23 180);
-  --color-accent-600: oklch(0.47 0.22 180);
-  --color-accent-700: oklch(0.39 0.18 180);
-  --color-accent-800: oklch(0.32 0.14 180);
-  --color-accent-900: oklch(0.26 0.10 180);
-  --color-accent-950: oklch(0.18 0.06 180);
-
-  /* ---- Neutral (grayscale) ---- */
-  --color-neutral-50: oklch(0.98 0.005 250);
-  --color-neutral-100: oklch(0.95 0.005 250);
-  --color-neutral-200: oklch(0.90 0.005 250);
-  --color-neutral-300: oklch(0.82 0.005 250);
-  --color-neutral-400: oklch(0.68 0.005 250);
-  --color-neutral-500: oklch(0.54 0.005 250);
-  --color-neutral-600: oklch(0.45 0.005 250);
-  --color-neutral-700: oklch(0.37 0.005 250);
-  --color-neutral-800: oklch(0.28 0.005 250);
-  --color-neutral-900: oklch(0.20 0.005 250);
-  --color-neutral-950: oklch(0.12 0.005 250);
-
-  /* ---- Semantic: Success ---- */
-  --color-success-50: oklch(0.97 0.04 145);
-  --color-success-100: oklch(0.93 0.08 145);
-  --color-success-200: oklch(0.86 0.14 145);
-  --color-success-300: oklch(0.76 0.19 145);
-  --color-success-400: oklch(0.66 0.23 145);
-  --color-success-500: oklch(0.55 0.24 145);
-  --color-success-600: oklch(0.47 0.22 145);
-  --color-success-700: oklch(0.39 0.17 145);
-  --color-success-800: oklch(0.32 0.13 145);
-  --color-success-900: oklch(0.26 0.09 145);
-  --color-success-950: oklch(0.18 0.05 145);
-
-  /* ---- Semantic: Warning ---- */
-  --color-warning-50: oklch(0.97 0.05 85);
-  --color-warning-100: oklch(0.93 0.10 85);
-  --color-warning-200: oklch(0.86 0.16 85);
-  --color-warning-300: oklch(0.76 0.21 85);
-  --color-warning-400: oklch(0.66 0.24 85);
-  --color-warning-500: oklch(0.55 0.25 85);
-  --color-warning-600: oklch(0.47 0.23 85);
-  --color-warning-700: oklch(0.39 0.18 85);
-  --color-warning-800: oklch(0.32 0.13 85);
-  --color-warning-900: oklch(0.26 0.09 85);
-  --color-warning-950: oklch(0.18 0.05 85);
-
-  /* ---- Semantic: Error / Destructive ---- */
-  --color-error-50: oklch(0.97 0.04 25);
-  --color-error-100: oklch(0.93 0.08 25);
-  --color-error-200: oklch(0.86 0.15 25);
-  --color-error-300: oklch(0.76 0.20 25);
-  --color-error-400: oklch(0.66 0.24 25);
-  --color-error-500: oklch(0.55 0.25 25);
-  --color-error-600: oklch(0.47 0.23 25);
-  --color-error-700: oklch(0.39 0.18 25);
-  --color-error-800: oklch(0.32 0.13 25);
-  --color-error-900: oklch(0.26 0.09 25);
-  --color-error-950: oklch(0.18 0.05 25);
+  /* ---- Neutral (grayscale only — no hue) ---- */
+  --color-neutral-50: oklch(0.99 0 0);
+  --color-neutral-100: oklch(0.96 0 0);
+  --color-neutral-200: oklch(0.90 0 0);
+  --color-neutral-300: oklch(0.80 0 0);
+  --color-neutral-400: oklch(0.65 0 0);
+  --color-neutral-500: oklch(0.50 0 0);
+  --color-neutral-600: oklch(0.40 0 0);
+  --color-neutral-700: oklch(0.30 0 0);
+  --color-neutral-800: oklch(0.20 0 0);
+  --color-neutral-900: oklch(0.13 0 0);
+  --color-neutral-950: oklch(0.07 0 0);
 
   /* ---- Typography: Font Families ---- */
   --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
@@ -98,7 +28,6 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", monospace;
 
   /* ---- Typography: Fluid Type Scale ---- */
-  /* clamp(min, preferred, max) — scales smoothly between viewport widths */
   --text-xs: clamp(0.64rem, 0.60rem + 0.20vw, 0.75rem);
   --text-sm: clamp(0.80rem, 0.75rem + 0.25vw, 0.875rem);
   --text-base: clamp(1.00rem, 0.95rem + 0.25vw, 1.125rem);
@@ -133,12 +62,11 @@
   --radius-full: 9999px;
 
   /* ---- Shadows ---- */
-  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.1);
-  /* Winning-cell glow (accent teal, visible on both light and dark). */
-  --shadow-glow: 0 0 0 3px oklch(0.66 0.22 180 / 0.35), 0 0 24px oklch(0.66 0.22 180 / 0.5);
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.15), 0 2px 4px -2px oklch(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.15), 0 4px 6px -4px oklch(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.15), 0 8px 10px -6px oklch(0 0 0 / 0.1);
+  --shadow-glow: 0 0 0 3px oklch(1 0 0 / 0.3), 0 0 20px oklch(1 0 0 / 0.2);
 
   /* ---- Z-Index Scale ---- */
   --z-dropdown: 10;
@@ -150,12 +78,7 @@
 
 /* ==========================================================================
    Semantic Token -> Tailwind Utility Mapping
-   ==========================================================================
-   `@theme inline` makes Tailwind emit utilities that reference the semantic
-   custom properties directly (e.g. `.bg-accent { background: var(--accent) }`),
-   so every utility follows the light/dark redefinition below. Without this
-   block, classes like bg-accent / text-text-primary / ring-accent generate
-   NO CSS at all in Tailwind v4. */
+   ========================================================================== */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -192,7 +115,7 @@
 }
 
 /* ==========================================================================
-   Light Mode (default)
+   Light Mode (default) — matches logo: white bg, bold black elements
    ========================================================================== */
 :root,
 [data-theme="light"] {
@@ -204,30 +127,21 @@
   --card-foreground: var(--color-neutral-950);
   --popover: #ffffff;
   --popover-foreground: var(--color-neutral-950);
-  --primary: var(--color-brand-600);
+  --primary: var(--color-neutral-950);
   --primary-foreground: var(--color-neutral-50);
   --secondary: var(--color-neutral-100);
   --secondary-foreground: var(--color-neutral-900);
-  /* WCAG 1.4.3: neutral-500 on neutral-100 (FREE cell, legend) is 4.37:1 —
-     neutral-600 keeps every muted-text pair >= 4.5:1. */
   --muted: var(--color-neutral-100);
-  --muted-foreground: var(--color-neutral-600);
-  /* WCAG 1.4.3: accent-500 with light text is 3.49:1 — accent-600 passes
-     (4.89:1) while staying in the teal family. */
-  --accent: var(--color-accent-600);
+  --muted-foreground: var(--color-neutral-500);
+  --accent: var(--color-neutral-900);
   --accent-foreground: var(--color-neutral-50);
-  --accent-hover: var(--color-accent-700);
-  /* WCAG 1.4.3: error-500 with light text is 4.79:1 — fine, but 600 is
-     safer for small banner text; error-600 is 6.41:1. */
-  --destructive: var(--color-error-600);
+  --accent-hover: var(--color-neutral-800);
+  --destructive: oklch(0.45 0.18 25);
   --destructive-foreground: var(--color-neutral-50);
-  /* WCAG 1.4.11 (non-text 3:1): neutral-200 is only 1.27:1 against the
-     page background — neutral-500 (4.78:1) makes borders and input
-     outlines clearly perceivable. */
-  --border: var(--color-neutral-500);
-  --border-hover: var(--color-neutral-600);
-  --input: var(--color-neutral-500);
-  --ring: var(--color-brand-500);
+  --border: var(--color-neutral-800);
+  --border-hover: var(--color-neutral-900);
+  --input: var(--color-neutral-600);
+  --ring: var(--color-neutral-950);
   --surface: var(--color-neutral-100);
   --surface-foreground: var(--color-neutral-900);
   --surface-base: var(--color-neutral-50);
@@ -236,13 +150,13 @@
   --text-primary: var(--color-neutral-950);
   --text-secondary: var(--color-neutral-700);
   --text-tertiary: var(--color-neutral-600);
-  --success-text: var(--color-success-700);
-  --success-strong: var(--color-success-700);
+  --success-text: oklch(0.40 0.14 145);
+  --success-strong: oklch(0.40 0.14 145);
   --success-strong-foreground: var(--color-neutral-50);
 }
 
 /* ==========================================================================
-   Dark Mode
+   Dark Mode — inverted: deep black bg, white elements
    ========================================================================== */
 [data-theme="dark"] {
   color-scheme: dark;
@@ -253,25 +167,21 @@
   --card-foreground: var(--color-neutral-50);
   --popover: var(--color-neutral-900);
   --popover-foreground: var(--color-neutral-50);
-  --primary: var(--color-brand-400);
+  --primary: var(--color-neutral-50);
   --primary-foreground: var(--color-neutral-950);
   --secondary: var(--color-neutral-800);
   --secondary-foreground: var(--color-neutral-100);
   --muted: var(--color-neutral-800);
   --muted-foreground: var(--color-neutral-400);
-  --accent: var(--color-accent-400);
+  --accent: var(--color-neutral-50);
   --accent-foreground: var(--color-neutral-950);
-  --accent-hover: var(--color-accent-500);
-  /* WCAG 1.4.3: error-400 with light text is 3.41:1 — error-500 passes
-     (4.79:1). */
-  --destructive: var(--color-error-500);
-  --destructive-foreground: var(--color-neutral-50);
-  /* WCAG 1.4.11: neutral-700 is 1.74:1 against the card — neutral-500
-     (3.58:1) passes on every dark surface. */
-  --border: var(--color-neutral-500);
-  --border-hover: var(--color-neutral-400);
+  --accent-hover: var(--color-neutral-200);
+  --destructive: oklch(0.55 0.18 25);
+  --destructive-foreground: var(--color-neutral-950);
+  --border: var(--color-neutral-700);
+  --border-hover: var(--color-neutral-600);
   --input: var(--color-neutral-500);
-  --ring: var(--color-brand-400);
+  --ring: var(--color-neutral-50);
   --surface: var(--color-neutral-800);
   --surface-foreground: var(--color-neutral-100);
   --surface-base: var(--color-neutral-950);
@@ -280,32 +190,19 @@
   --text-primary: var(--color-neutral-50);
   --text-secondary: var(--color-neutral-300);
   --text-tertiary: var(--color-neutral-400);
-  --success-text: var(--color-success-300);
-  --success-strong: var(--color-success-300);
+  --success-text: oklch(0.60 0.14 145);
+  --success-strong: oklch(0.50 0.14 145);
   --success-strong-foreground: var(--color-neutral-950);
 }
 
 /* ==========================================================================
    Base Styles
    ========================================================================== */
-/* NOTE: no unlayered `* { margin: 0; padding: 0 }` reset here. Tailwind v4's
-   preflight (via @import "tailwindcss") already provides the identical reset
-   inside @layer base. A reset at the top level is UNLAYERED, and unlayered
-   CSS beats every @layer rule regardless of specificity — it silently
-   zeroed mx-auto (board rendered on the left instead of centered) and all
-   utility padding/margins (p-4 cards, px-4 buttons, mt-* spacing).
-   Guarded by src/app/globals.test.ts. */
-
 html {
-  /* Smooth font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-
-  /* Prevent layout shift on scrollbar appearance */
   scrollbar-gutter: stable;
-
-  /* Respect user's motion preferences */
   scroll-behavior: smooth;
 }
 
@@ -321,9 +218,7 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.6;
-  min-height: 100dvh; /* Dynamic viewport height for mobile */
-  /* No flex/centering — conflicts with sticky header and bento-grid
-     centering. Layout centers via margin:auto on .bento-grid instead. */
+  min-height: 100dvh;
 }
 
 /* ---- Typography Classes ---- */
@@ -420,52 +315,87 @@ body {
   color: var(--primary-foreground);
 }
 
-/* ---- Wordmark Gradient ---- */
-/* The single allowed polish item: gradient text on the Bingo wordmark.
-   Both gradient stops pass WCAG large-text contrast (>= 3:1) on the header
-   surface in light AND dark mode. */
-.wordmark-gradient {
-  background: linear-gradient(135deg, var(--accent), oklch(0.6 0.24 340));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  text-decoration: none;
+/* ---- Sphere Decorative Background ---- */
+/* Subtle glossy spheres behind the wordmark — matches logo motif */
+.sphere-motif {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ---- Glassmorphic Header ---- */
-.glass-header {
+.sphere-motif::before,
+.sphere-motif::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.06) 50%, transparent 70%);
+}
+
+.sphere-motif::before {
+  width: 180px;
+  height: 180px;
+  top: -40px;
+  left: 30%;
+  filter: blur(1px);
+}
+
+.sphere-motif::after {
+  width: 100px;
+  height: 100px;
+  top: 20px;
+  right: 10%;
+  filter: blur(0.5px);
+}
+
+/* ---- Bold Header ---- */
+.site-header {
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: oklch(0.98 0.005 250 / 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-bottom: 2px solid var(--primary);
 }
 
-/* Dark override — must come after the base rule and match with higher
-   specificity than the light default so dark mode actually applies
-   (`:root .glass-header` would otherwise win for every theme). */
-[data-theme="dark"] .glass-header {
-  background: oklch(0.20 0.01 250 / 0.6);
+[data-theme="dark"] .site-header {
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 
-.glass-header__inner {
+.site-header__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.5rem;
+  position: relative;
 }
 
-.glass-header__wordmark {
+.site-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+}
+
+.site-header__logo {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
+.site-header__wordmark {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
   line-height: 1.1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -483,17 +413,14 @@ body {
   min-width: 0;
 }
 
-/* The board spans full width so it centers across the entire page. */
 .bento-grid__board {
   grid-column: 1 / -1;
 }
 
-/* Full-width sections (load form, share, errors). */
 .bento-grid__full {
   grid-column: 1 / -1;
 }
 
-/* Responsive: stack to single column on narrow viewports. */
 @media (max-width: 768px) {
   .bento-grid {
     grid-template-columns: 1fr;

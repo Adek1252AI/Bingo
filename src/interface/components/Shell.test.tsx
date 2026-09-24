@@ -17,7 +17,6 @@ describe('Shell', () => {
         <p>Child content</p>
       </Shell>
     );
-    // ThemeToggle renders a button with aria-label containing "switch to"
     const toggleButton = screen.getByRole('button', { name: /switch to/i });
     expect(toggleButton).toBeInTheDocument();
   });
@@ -31,22 +30,23 @@ describe('Shell', () => {
     expect(screen.getByTestId('child')).toBeInTheDocument();
   });
 
-  it('has the glassmorphic header class', () => {
+  it('has the site-header class on the header', () => {
     const { container } = render(
       <Shell>
         <p>Child</p>
       </Shell>
     );
-    expect(container.querySelector('.glass-header')).toBeInTheDocument();
+    expect(container.querySelector('.site-header')).toBeInTheDocument();
   });
 
-  it('has the wordmark-gradient class on the wordmark link', () => {
-    render(
+  it('renders the logo image', () => {
+    const { container } = render(
       <Shell>
         <p>Child</p>
       </Shell>
     );
-    const wordmark = screen.getByText('Bingo');
-    expect(wordmark).toHaveClass('wordmark-gradient');
+    const logo = container.querySelector('.site-header__logo');
+    expect(logo).toBeInTheDocument();
+    expect(logo?.tagName).toBe('IMG');
   });
 });

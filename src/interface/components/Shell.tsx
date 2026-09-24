@@ -1,4 +1,3 @@
-
 'use client';
 
 import { ReactNode } from 'react';
@@ -9,28 +8,24 @@ interface ShellProps {
 }
 
 /**
- * Optional lobby/dashboard shell: a sticky glassmorphic header with the
- * gradient wordmark + theme toggle, and a bento grid for the content.
- *
- * The "use shell" flag lets callers opt in. When false, the page renders
- * without the shell (original compact single-column layout).
+ * Top shell with the logo, bold header, and bento grid content.
  */
 export default function Shell({ children }: ShellProps) {
   return (
     <>
-      <header className="glass-header">
-        <div className="glass-header__inner">
-          {/* The wordmark is the page's single h1 (WCAG 1.3.1 — every page
-              needs one top-level heading). */}
-          <h1 className="glass-header__wordmark">
-            <a
-              href="/"
-              className="wordmark-gradient"
-              aria-label="Bingo home"
-            >
-              Bingo
-            </a>
-          </h1>
+      <header className="site-header">
+        <div className="site-header__inner">
+          <div className="sphere-motif" aria-hidden="true" />
+          <a href="/" className="site-header__brand" aria-label="Bingo home">
+            <img
+              src="/Bingo/logo.png"
+              alt=""
+              className="site-header__logo"
+              width="36"
+              height="36"
+            />
+            <span className="site-header__wordmark">Bingo</span>
+          </a>
           <ThemeToggle />
         </div>
       </header>

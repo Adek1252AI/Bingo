@@ -29,9 +29,6 @@ interface Props {
 
 /**
  * Map cell content length to a responsive font-size class.
- * Short text gets larger classes; long text shrinks to fit.
- * The `sm:` / `md:` variants prevent overflow on smaller viewports
- * while preserving the visual hierarchy between short and long labels.
  */
 export function getTextSizeClass(text: string): string {
   const len = text.length;
@@ -41,9 +38,6 @@ export function getTextSizeClass(text: string): string {
   return 'text-xs sm:text-sm md:text-base';
 }
 
-// Staggered entrance (spec step 6): cards fade in and slide up one by one
-// over 300ms each. 30ms between cards keeps the wave visible while landing
-// the whole 25-card board in about a second (snappy, per the spec's intent).
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -79,7 +73,7 @@ export default function BoardGrid({
 
   return (
     <div className="mt-6">
-      <Card className="border-border bg-surface-elevated">
+      <Card className="border-2 border-neutral-900 bg-white shadow-lg">
         <CardContent className="p-4 sm:p-6">
           <h2 className="font-display text-2xl mb-4 text-text-primary">Your Board</h2>
 
@@ -93,14 +87,14 @@ export default function BoardGrid({
             >
               <Badge
                 variant="default"
-                className="px-6 py-3 text-lg font-mono font-bold tracking-wider shadow-lg"
+                className="px-6 py-3 text-lg font-mono font-bold tracking-wider shadow-lg bg-neutral-900 text-white"
               >
                 {current}
               </Badge>
             </motion.div>
           )}
 
-          {/* 5x5 Grid — staggered entrance, re-triggered by entranceKey */}
+          {/* 5x5 Grid */}
           <motion.div
             key={entranceKey ?? 'board'}
             data-board-key={entranceKey ?? 'board'}
@@ -109,7 +103,6 @@ export default function BoardGrid({
               'mx-auto max-w-[600px]'
             )}
             variants={containerVariants}
-            // Reduced motion: skip the stagger, render everything visible.
             initial={reduceMotion ? false : 'hidden'}
             animate="visible"
           >
@@ -121,20 +114,14 @@ export default function BoardGrid({
                 const isWinning = winningKeys.has(`${r}-${c}`);
                 const index = r * 5 + c;
 
-                // Inner element: a button when daubable, a plain div for the
-                // free cell (it can never be marked).
-                // Both fill their grid cell: `w-full aspect-square`. Without
-                // `w-full`, an aspect-square flex element shrink-to-fits to
-                // its text content, so every cell renders a different size.
                 const inner = isFree ? (
                   <div
                     className={cn(
                       'w-full aspect-square flex items-center justify-center px-1',
-                      'rounded-lg border font-mono font-semibold',
+                      'rounded-lg border-2 font-mono font-semibold',
                       'select-none overflow-hidden',
                       getTextSizeClass(cell),
-                      'bg-surface text-muted-foreground border-border',
-                      'italic font-normal'
+                      'bg-neutral-900 text-white border-neutral-900'
                     )}
                   >
                     {cell}
@@ -144,44 +131,40 @@ export default function BoardGrid({
                     type="button"
                     aria-pressed={isCalled}
                     onClick={() => onCellToggle?.(cell)}
-                    // Micro-interaction (spec 5.1): lift on hover, press
-                    // feedback on tap.
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.94 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
                     className={cn(
                       'w-full aspect-square flex items-center justify-center gap-1 px-1',
-                      'rounded-lg border font-mono font-semibold',
+                      'rounded-lg border-2 font-mono font-semibold',
                       'transition-colors duration-150 select-none',
                       getTextSizeClass(cell),
                       'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
-                      'focus-visible:ring-offset-surface-elevated',
+                      'focus-visible:ring-offset-white',
 
-                      // Default (uncalled) cell
+                      // Default (uncalled) cell — white with bold border
                       !isCalled && !isCurrent && [
-                        'bg-surface-elevated text-text-primary',
-                        'border-border hover:border-border-hover',
+                        'bg-white text-neutral-900',
+                        'border-neutral-900 hover:border-neutral-700',
                         'hover:shadow-md',
                       ],
 
-                      // Called cell — highlighted accent (+ check icon so
-                      // color is not the only signal, spec 5.2)
+                      // Called cell — bold black with check
                       isCalled && !isCurrent && [
-                        'bg-accent text-surface-base border-accent',
+                        'bg-neutral-900 text-white border-neutral-900',
                         'shadow-md',
                       ],
 
-                      // Current cell — prominent with glow (same font size
-                      // as other cells; emphasis via color + ring + shadow)
+                      // Current cell — highlighted
                       isCurrent && [
-                        'bg-primary text-primary-foreground border-primary',
-                        'shadow-lg ring-2 ring-primary/50',
+                        'bg-neutral-800 text-white border-neutral-800',
+                        'shadow-lg ring-2 ring-neutral-800/50',
                       ],
 
-                      // Winning cells — glow highlight (spec step 7)
-                      isWinning && 'winning-cell ring-2 ring-accent shadow-glow'
+                      // Winning cells
+                      isWinning && 'winning-cell ring-2 ring-neutral-900 shadow-glow'
                     )}
                   >
                     {isCalled && !isCurrent && (
@@ -190,10 +173,6 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    {/* min-w-0 lets the span shrink below its text width so
-                        break-words can actually wrap (flex children default
-                        to min-width:auto, which made long words clip instead
-                        of wrapping). text-center keeps wrapped lines centered. */}
                     <span className="min-w-0 break-words text-center">{cell}</span>
                   </motion.button>
                 );
@@ -202,9 +181,6 @@ export default function BoardGrid({
                   <motion.div
                     key={`${r}-${c}`}
                     data-cell-index={index}
-                    // min-w-0: lets a long word truncate inside its track
-                    // instead of stretching the grid column (grid items are
-                    // min-width:auto by default).
                     className="min-w-0"
                     variants={cellVariants}
                   >
@@ -218,19 +194,19 @@ export default function BoardGrid({
           {/* Legend */}
           <div className="mt-4 flex flex-wrap gap-3 justify-center text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded border border-border bg-surface-elevated" />
+              <span className="w-3 h-3 rounded border-2 border-neutral-900 bg-white" />
               Uncalled
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-accent border border-accent" />
+              <span className="w-3 h-3 rounded bg-neutral-900 border-2 border-neutral-900" />
               Called
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-primary border border-primary ring-1 ring-primary/50" />
+              <span className="w-3 h-3 rounded bg-neutral-800 border-2 border-neutral-800 ring-1 ring-neutral-800/50" />
               Current
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-surface border border-border" />
+              <span className="w-3 h-3 rounded bg-neutral-900 border-2 border-neutral-900" />
               Free
             </span>
           </div>
