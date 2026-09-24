@@ -13,9 +13,13 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.2",
     "next": "^15.5.26",
     "react": "^18",
     "react-dom": "^18",
+    "tailwind-merge": "^2.6.1",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
