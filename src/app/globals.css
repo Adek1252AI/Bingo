@@ -213,12 +213,12 @@ html {
 }
 
 body {
-  background-color: var(--background);
+  background-color: rgba(255, 255, 255, 0.92);
   background-image: url('/Bingo/spheres-bg.png');
   background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-  background-attachment: fixed;
+  background-position: center 80px;
+  background-size: 90% auto;
+  background-attachment: scroll;
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -332,7 +332,7 @@ body::after {
   position: fixed;
   border-radius: 50%;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
 }
 
 body::before {
@@ -357,25 +357,6 @@ body::after {
     inset -15px -15px 30px oklch(0.10 0 0 / 0.5),
     0 0 40px oklch(0 0 0 / 0.12);
   opacity: 0.8;
-}
-
-/* Additional scattered spheres via background layers */
-body {
-  background-image:
-    radial-gradient(circle at 25% 35%, oklch(0.92 0 0 / 0.9) 0%, oklch(0.55 0 0 / 0.85) 30%, oklch(0.20 0 0 / 0.8) 60%, transparent 75%),
-    radial-gradient(circle at 75% 65%, oklch(0.95 0 0 / 0.85) 0%, oklch(0.50 0 0 / 0.8) 30%, oklch(0.18 0 0 / 0.75) 60%, transparent 78%),
-    radial-gradient(circle at 50% 85%, oklch(0.90 0 0 / 0.8) 0%, oklch(0.58 0 0 / 0.75) 28%, oklch(0.22 0 0 / 0.7) 55%, transparent 72%),
-    radial-gradient(circle at 15% 75%, oklch(0.88 0 0 / 0.75) 0%, oklch(0.60 0 0 / 0.7) 25%, oklch(0.25 0 0 / 0.65) 50%, transparent 68%),
-    radial-gradient(circle at 85% 25%, oklch(0.92 0 0 / 0.7) 0%, oklch(0.55 0 0 / 0.65) 22%, oklch(0.20 0 0 / 0.6) 45%, transparent 62%),
-    url('/Bingo/spheres-bg.png');
-  background-repeat: no-repeat;
-  background-position: 10% 25%, 70% 55%, 45% 75%, 8% 65%, 80% 15%, center top;
-  background-size: 350px 350px, 280px 280px, 250px 250px, 220px 220px, 180px 180px, contain;
-  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
-}
-
-[data-theme="dark"] body {
-  background-image: none;
 }
 
 /* ---- Bold Header ---- */

@@ -105,6 +105,7 @@ export default function BoardGrid({
             variants={containerVariants}
             initial={reduceMotion ? false : 'hidden'}
             animate="visible"
+            style={{ containerType: 'inline-size' }}
           >
             {grid.map((row, r) =>
               row.map((cell, c) => {
@@ -120,11 +121,15 @@ export default function BoardGrid({
                       'w-full aspect-square flex items-center justify-center px-1',
                       'rounded-lg border-2 font-mono font-semibold',
                       'select-none overflow-hidden',
-                      getTextSizeClass(cell),
                       'bg-neutral-900 text-white border-neutral-900'
                     )}
                   >
-                    {cell}
+                    <span
+                      className="truncate whitespace-nowrap"
+                      style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
+                    >
+                      {cell}
+                    </span>
                   </div>
                 ) : (
                   <motion.button
@@ -173,7 +178,12 @@ export default function BoardGrid({
                         className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
-                    <span className="truncate whitespace-nowrap">{cell}</span>
+                    <span
+                      className="truncate whitespace-nowrap"
+                      style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
+                    >
+                      {cell}
+                    </span>
                   </motion.button>
                 );
 
@@ -183,6 +193,7 @@ export default function BoardGrid({
                     data-cell-index={index}
                     className="min-w-0"
                     variants={cellVariants}
+                    style={{ containerType: 'inline-size' }}
                   >
                     {inner}
                   </motion.div>

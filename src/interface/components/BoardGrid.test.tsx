@@ -212,38 +212,35 @@ describe('BoardGrid', () => {
       spans.forEach((span) => {
         expect(span).toHaveClass('truncate');
         expect(span).toHaveClass('whitespace-nowrap');
+        expect(span.getAttribute('style')).toContain('cqw');
       });
     });
   });
 
   describe('responsive text sizing', () => {
-    it('applies larger font class to shorter text and smaller class to longer text', () => {
+    it('uses container-query font sizing on all cells', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
 
       const allButtons = gridContainer.querySelectorAll('button');
-      const classesByText: Record<string, string[]> = {};
-      allButtons.forEach((btn) => {
-        const text = btn.textContent.trim();
-        classesByText[text] = btn.className
-          .split(' ')
-          .filter((c) => /^text-(xs|sm|base|lg|xl|2xl)$/.test(c));
-      });
+      expect(allButtons.length).toBe(24);
 
-      expect(classesByText['fig']).toContain('text-base');
-      expect(classesByText['kiwi']).toContain('text-base');
-      expect(classesByText['elderberry']).toContain('text-xs');
-      expect(classesByText['watermelon']).toContain('text-xs');
-      expect(classesByText['strawberry']).toContain('text-xs');
-      expect(classesByText['raspberry']).toContain('text-xs');
-      expect(classesByText['nectarine']).toContain('text-xs');
-      expect(classesByText['tangerine']).toContain('text-xs');
+      // All cells use inline cqw-based font sizing
+      allButtons.forEach((btn) => {
+        const span = btn.querySelector('span');
+        expect(span).toBeTruthy();
+        expect(span?.getAttribute('style')).toContain('cqw');
+        expect(span).toHaveClass('truncate');
+        expect(span).toHaveClass('whitespace-nowrap');
+      });
     });
 
     it('free cell also uses responsive text sizing', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
-      expect(freeCell.className).toMatch(/text-base/);
+      const span = freeCell.querySelector('span')!;
+      expect(span).toBeTruthy();
+      expect(span.getAttribute('style')).toContain('cqw');
     });
   });
 
