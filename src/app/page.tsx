@@ -29,6 +29,7 @@ export default function HomePage() {
   const [shareInput, setShareInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loadedFromLink, setLoadedFromLink] = useState(false);
+  const [loadedTopic, setLoadedTopic] = useState<string | null>(null);
 
   // If the page is opened with a share link (#<payload> in the URL), load it
   // automatically. The fragment never reaches the server, so this works on
@@ -52,6 +53,7 @@ export default function HomePage() {
       const link = createLink.execute(newBoard, topic);
       setShareLink(link);
       setLoadedFromLink(false);
+      setLoadedTopic(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong while generating the board.');
     } finally {
@@ -69,6 +71,7 @@ export default function HomePage() {
       setTopic(result.topic);
       setShareLink(null);
       setLoadedFromLink(true);
+      setLoadedTopic(result.topic);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the shared board.');
     }
@@ -111,9 +114,9 @@ export default function HomePage() {
 
       {board && arrangement && !error && (
         <>
-          {loadedFromLink && topic && (
+          {loadedFromLink && loadedTopic && (
             <p style={styles.loadedNote}>
-              Loaded shared board — topic: {topic}. Same words as your friend,
+              Loaded shared board — topic: {loadedTopic}. Same words as your friend,
               your own cell arrangement.
             </p>
           )}
