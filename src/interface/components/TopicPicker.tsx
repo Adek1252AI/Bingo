@@ -39,6 +39,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid var(--border)',
     padding: '0.75rem',
     borderRadius: 6,
+    backgroundColor: 'var(--surface-elevated)',
   },
   list: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
   label: { display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' },

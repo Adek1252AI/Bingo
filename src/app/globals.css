@@ -213,12 +213,12 @@ html {
 }
 
 body {
-  background-color: rgba(255, 255, 255, 0.92);
+  background-color: rgb(255, 255, 255);
   background-image: url('/Bingo/spheres-bg.png');
   background-repeat: no-repeat;
-  background-position: center 80px;
-  background-size: 90% auto;
-  background-attachment: scroll;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -455,4 +455,12 @@ body::after {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* ---- Mobile: fall back to scroll attachment for iOS Safari compatibility ---- */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    background-position: top center;
+  }
 }
