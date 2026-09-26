@@ -69,14 +69,19 @@ describe('BoardGrid', () => {
     expect(screen.getByText('Your Board')).toBeTruthy();
   });
 
-  it('highlights called cells with dark background', () => {
+  it('highlights called cells with soft pastel accent fill', () => {
     const called = ['apple', 'cherry', 'mango'];
     const { container } = render(<BoardGrid grid={SAMPLE_GRID} called={called} />);
 
     const gridContainer = container.querySelector('.grid-cols-5')!;
-    const calledElements = gridContainer.querySelectorAll('.bg-neutral-900');
-    // 3 called cells + 1 FREE cell = 4
-    expect(calledElements.length).toBe(4);
+    // Called cells get accent-tinted background (color-mix with accent).
+    // 3 called cells + 1 FREE cell (full accent bg) = 4 cells with accent color.
+    const accentCells = Array.from(gridContainer.querySelectorAll('button, div'))
+      .filter(el => {
+        const bg = el.style.background;
+        return bg && bg.includes('accent');
+      });
+    expect(accentCells.length).toBe(4);
   });
 
   it('displays the current number prominently with badge', () => {
@@ -89,7 +94,7 @@ describe('BoardGrid', () => {
 
   it('styles the free cell distinctly', () => {
     const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-    const freeCell = container.querySelector('.bg-neutral-900.text-white');
+    const freeCell = container.querySelector('[style*="var(--accent)"][style*="var(--surface-base)"]');
     expect(freeCell).toBeTruthy();
     expect(freeCell?.textContent).toBe('FREE');
   });
@@ -103,16 +108,26 @@ describe('BoardGrid', () => {
 
     const gridContainer = container.querySelector('.grid-cols-5')!;
 
-    // Called cells (dark) — should be 2 + 1 FREE cell = 3
-    const calledElements = gridContainer.querySelectorAll('.bg-neutral-900');
-    expect(calledElements.length).toBe(3);
+    // Called cells (accent-tinted, not full accent) — 2 called cells
+    // FREE cell has full accent bg too, but it's counted separately.
+    // Current cell (cherry) also has full accent bg.
+    const calledCells = Array.from(gridContainer.querySelectorAll('button'))
+      .filter(el => {
+        const bg = (el as HTMLElement).style.background;
+        return bg && bg.includes('accent') && bg !== 'var(--accent)';
+      });
+    expect(calledCells.length).toBe(2);
 
-    // Current cell (lighter dark) — should be exactly 1
-    const currentElements = gridContainer.querySelectorAll('.bg-neutral-800');
-    expect(currentElements.length).toBe(1);
+    // Current cell (full accent bg) — should be exactly 1
+    const currentCells = Array.from(gridContainer.querySelectorAll('button, div'))
+      .filter(el => {
+        const bg = (el as HTMLElement).style.background;
+        return bg === 'var(--accent)';
+      });
+    expect(currentCells.length).toBe(2); // FREE cell + current cell
 
-    // Free cell (distinct dark)
-    const freeCell = container.querySelector('.bg-neutral-900.text-white');
+    // Free cell (full accent bg + surface-base text)
+    const freeCell = container.querySelector('[style*="var(--accent)"][style*="var(--surface-base)"]');
     expect(freeCell).toBeTruthy();
   });
 
@@ -189,7 +204,7 @@ describe('BoardGrid', () => {
 
     it('the FREE cell fills its grid cell too', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-      const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
+      const freeCell = container.querySelector('[style*="var(--accent)"]')!;
       expect(freeCell).toHaveClass('w-full');
       expect(freeCell).toHaveClass('aspect-square');
     });
@@ -235,7 +250,7 @@ describe('BoardGrid', () => {
 
     it('free cell also uses responsive text sizing', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
-      const freeCell = container.querySelector('.bg-neutral-900.text-white')!;
+      const freeCell = container.querySelector('[style*="var(--accent)"]')!;
       const span = freeCell.querySelector('span')!;
       expect(span).toBeTruthy();
       expect(span.getAttribute('style')).toContain('cqw');

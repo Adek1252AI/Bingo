@@ -1,11 +1,10 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Monochromatic Color System — Dark/Light Mode Tokens
-   Matches the Bingo logo: bold black/white, high contrast, playful spheres.
+   Pastel Color Token System — Light/Dark Mode with Soft Sky & Mint Accents
    ==========================================================================
-   Light mode (default): clean white background, bold black elements —
-   mirrors the logo directly. Dark mode inverts.
+   Light mode (default): warm off-white canvas, soft sky-blue accent, gentle mint
+   secondary — pastel throughout, no harsh blacks.
    ========================================================================== */
 
 @theme {
@@ -22,21 +21,21 @@
   --color-neutral-900: oklch(0.13 0 0);
   --color-neutral-950: oklch(0.07 0 0);
 
-  /* ---- Typography: Font Families ---- */
-  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
-  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* ---- Typography: Semantic Font Families ---- */
+  --font-heading: "Outfit", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", monospace;
 
   /* ---- Typography: Fluid Type Scale ---- */
-  --text-xs: clamp(0.64rem, 0.60rem + 0.20vw, 0.75rem);
-  --text-sm: clamp(0.80rem, 0.75rem + 0.25vw, 0.875rem);
-  --text-base: clamp(1.00rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg: clamp(1.20rem, 1.10rem + 0.50vw, 1.375rem);
-  --text-xl: clamp(1.50rem, 1.30rem + 1.00vw, 1.875rem);
-  --text-2xl: clamp(1.875rem, 1.50rem + 1.875vw, 2.5rem);
-  --text-3xl: clamp(2.25rem, 1.75rem + 2.50vw, 3.5rem);
-  --text-4xl: clamp(3.00rem, 2.25rem + 3.75vw, 5rem);
-  --text-5xl: clamp(3.75rem, 2.75rem + 5.00vw, 6.5rem);
+  --text-xs:  clamp(0.70rem, 0.62rem + 0.40vw, 0.8125rem);
+  --text-sm:  clamp(0.875rem, 0.80rem + 0.375vw, 1rem);
+  --text-base: clamp(1.0625rem, 0.95rem + 0.5625vw, 1.25rem);
+  --text-lg:  clamp(1.25rem, 1.10rem + 0.75vw, 1.5rem);
+  --text-xl:  clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  --text-2xl: clamp(1.875rem, 1.50rem + 1.875vw, 2.75rem);
+  --text-3xl: clamp(2.25rem, 1.75rem + 2.50vw, 3.75rem);
+  --text-4xl: clamp(3rem, 2.25rem + 3.75vw, 5.5rem);
+  --text-5xl: clamp(3.75rem, 2.75rem + 5.00vw, 7rem);
 
   /* ---- Spacing (4px base unit) ---- */
   --spacing-0: 0;
@@ -53,20 +52,20 @@
   --spacing-20: 5rem;
   --spacing-24: 6rem;
 
-  /* ---- Border Radius ---- */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
+  /* ---- Border Radius (softened for pastel) ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* ---- Shadows ---- */
-  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.08);
-  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.15), 0 2px 4px -2px oklch(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.15), 0 4px 6px -4px oklch(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.15), 0 8px 10px -6px oklch(0 0 0 / 0.1);
-  --shadow-glow: 0 0 0 3px oklch(1 0 0 / 0.3), 0 0 20px oklch(1 0 0 / 0.2);
+  /* ---- Shadows (softened: no harsh black shadows) ---- */
+  --shadow-sm: 0 1px 2px 0 oklch(0.45 0.01 260deg / 0.06);
+  --shadow-md: 0 4px 6px -1px oklch(0.45 0.01 260deg / 0.08), 0 2px 4px -2px oklch(0.45 0.01 260deg / 0.05);
+  --shadow-lg: 0 10px 15px -3px oklch(0.45 0.01 260deg / 0.08), 0 4px 6px -4px oklch(0.45 0.01 260deg / 0.05);
+  --shadow-xl: 0 20px 25px -5px oklch(0.45 0.01 260deg / 0.08), 0 8px 10px -6px oklch(0.45 0.01 260deg / 0.05);
+  --shadow-glow: 0 0 0 3px oklch(0.72 0.11 222deg / 0.15), 0 0 24px oklch(0.72 0.11 222deg / 0.12);
 
   /* ---- Z-Index Scale ---- */
   --z-dropdown: 10;
@@ -115,84 +114,89 @@
 }
 
 /* ==========================================================================
-   Light Mode (default) — matches logo: white bg, bold black elements
+   Pastel Token Sheet (imported for reference; tokens also declared below)
+   ========================================================================== */
+@import "./pastel-tokens.css";
+
+/* ==========================================================================
+   Light Mode (default) — pastel warm canvas, soft sky + mint accents
    ========================================================================== */
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
-  --background: var(--color-neutral-50);
-  --foreground: var(--color-neutral-950);
-  --card: #ffffff;
-  --card-foreground: var(--color-neutral-950);
-  --popover: #ffffff;
-  --popover-foreground: var(--color-neutral-950);
-  --primary: var(--color-neutral-950);
-  --primary-foreground: var(--color-neutral-50);
-  --secondary: var(--color-neutral-100);
-  --secondary-foreground: var(--color-neutral-900);
-  --muted: var(--color-neutral-100);
-  --muted-foreground: var(--color-neutral-500);
-  --accent: var(--color-neutral-900);
-  --accent-foreground: var(--color-neutral-50);
-  --accent-hover: var(--color-neutral-800);
-  --destructive: oklch(0.45 0.18 25);
-  --destructive-foreground: var(--color-neutral-50);
-  --border: var(--color-neutral-800);
-  --border-hover: var(--color-neutral-900);
-  --input: var(--color-neutral-600);
-  --ring: var(--color-neutral-950);
-  --surface: var(--color-neutral-100);
-  --surface-foreground: var(--color-neutral-900);
-  --surface-base: var(--color-neutral-50);
-  --surface-elevated: #ffffff;
-  --surface-hover: var(--color-neutral-200);
-  --text-primary: var(--color-neutral-950);
-  --text-secondary: var(--color-neutral-700);
-  --text-tertiary: var(--color-neutral-600);
-  --success-text: oklch(0.40 0.14 145);
-  --success-strong: oklch(0.40 0.14 145);
-  --success-strong-foreground: var(--color-neutral-50);
+  --background: var(--surface-base);
+  --foreground: var(--text-primary);
+  --card: var(--surface-elevated);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-elevated);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent);
+  --primary-foreground: var(--text-primary);
+  --secondary: var(--accent-secondary);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-elevated);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--accent);
+  --accent-foreground: var(--text-primary);
+  --accent-hover: oklch(0.66 0.12 222deg);
+  --destructive: oklch(0.50 0.16 25);
+  --destructive-foreground: var(--surface-base);
+  --border: var(--border);
+  --border-hover: var(--border-hover);
+  --input: var(--border);
+  --ring: var(--accent);
+  --surface: var(--surface-base);
+  --surface-foreground: var(--text-primary);
+  --surface-base: var(--surface-base);
+  --surface-elevated: var(--surface-elevated);
+  --surface-hover: oklch(0.915 0.022 70deg);
+  --text-primary: var(--text-primary);
+  --text-secondary: var(--text-secondary);
+  --text-tertiary: oklch(0.62 0 0);
+  --success-text: oklch(0.55 0.12 145);
+  --success-strong: oklch(0.55 0.12 145);
+  --success-strong-foreground: var(--surface-base);
 }
 
 /* ==========================================================================
-   Dark Mode — inverted: deep black bg, white elements
+   Dark Mode — soft cool canvas, pastel accents preserved
    ========================================================================== */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --background: var(--color-neutral-950);
-  --foreground: var(--color-neutral-50);
-  --card: var(--color-neutral-900);
-  --card-foreground: var(--color-neutral-50);
-  --popover: var(--color-neutral-900);
-  --popover-foreground: var(--color-neutral-50);
-  --primary: var(--color-neutral-50);
-  --primary-foreground: var(--color-neutral-950);
-  --secondary: var(--color-neutral-800);
-  --secondary-foreground: var(--color-neutral-100);
-  --muted: var(--color-neutral-800);
-  --muted-foreground: var(--color-neutral-400);
-  --accent: var(--color-neutral-50);
-  --accent-foreground: var(--color-neutral-950);
-  --accent-hover: var(--color-neutral-200);
-  --destructive: oklch(0.55 0.18 25);
-  --destructive-foreground: var(--color-neutral-950);
-  --border: var(--color-neutral-700);
-  --border-hover: var(--color-neutral-600);
-  --input: var(--color-neutral-500);
-  --ring: var(--color-neutral-50);
-  --surface: var(--color-neutral-800);
-  --surface-foreground: var(--color-neutral-100);
-  --surface-base: var(--color-neutral-950);
-  --surface-elevated: var(--color-neutral-900);
-  --surface-hover: var(--color-neutral-700);
-  --text-primary: var(--color-neutral-50);
-  --text-secondary: var(--color-neutral-300);
-  --text-tertiary: var(--color-neutral-400);
-  --success-text: oklch(0.60 0.14 145);
-  --success-strong: oklch(0.50 0.14 145);
-  --success-strong-foreground: var(--color-neutral-950);
+  --background: oklch(0.16 0.01 260deg);
+  --foreground: oklch(0.92 0.01 260deg);
+  --card: oklch(0.20 0.01 260deg);
+  --card-foreground: oklch(0.92 0.01 260deg);
+  --popover: oklch(0.20 0.01 260deg);
+  --popover-foreground: oklch(0.92 0.01 260deg);
+  --primary: oklch(0.72 0.11 222deg);
+  --primary-foreground: oklch(0.18 0.01 260deg);
+  --secondary: oklch(0.78 0.05 150deg);
+  --secondary-foreground: oklch(0.16 0.01 260deg);
+  --muted: oklch(0.24 0.01 260deg);
+  --muted-foreground: oklch(0.70 0.01 260deg);
+  --accent: oklch(0.72 0.11 222deg);
+  --accent-foreground: oklch(0.18 0.01 260deg);
+  --accent-hover: oklch(0.64 0.13 222deg);
+  --destructive: oklch(0.55 0.16 25);
+  --destructive-foreground: oklch(0.92 0.01 260deg);
+  --border: oklch(0.32 0.01 260deg);
+  --border-hover: oklch(0.42 0.01 260deg);
+  --input: oklch(0.32 0.01 260deg);
+  --ring: oklch(0.72 0.11 222deg);
+  --surface: oklch(0.16 0.01 260deg);
+  --surface-foreground: oklch(0.92 0.01 260deg);
+  --surface-base: oklch(0.16 0.01 260deg);
+  --surface-elevated: oklch(0.20 0.01 260deg);
+  --surface-hover: oklch(0.26 0.01 260deg);
+  --text-primary: oklch(0.92 0.01 260deg);
+  --text-secondary: oklch(0.78 0.01 260deg);
+  --text-tertiary: oklch(0.58 0.01 260deg);
+  --success-text: oklch(0.75 0.10 145deg);
+  --success-strong: oklch(0.75 0.10 145deg);
+  --success-strong-foreground: oklch(0.16 0.01 260deg);
 }
 
 /* ==========================================================================
@@ -212,34 +216,58 @@ html {
   }
 }
 
+/* ---- Pastel gradient mesh backdrop (light mode) ---- */
 body {
-  background-color: rgb(255, 255, 255);
-  background-image: url('/Bingo/spheres-bg.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
+  background-color: var(--surface-base);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: 1.7;
   min-height: 100dvh;
+  position: relative;
 }
 
-[data-theme="dark"] body {
-  background-image: none;
+/* Soft pastel gradient mesh overlay — faint, warm. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, oklch(0.975 0.025 75deg) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 85%, oklch(0.965 0.020 150deg) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, oklch(0.970 0.018 222deg) 0%, transparent 50%);
+  opacity: 0.7;
+}
+
+/* Soft grain texture overlay — very subtle. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] body::before,
+[data-theme="dark"] body::after {
+  display: none;
 }
 
 /* ---- Typography Classes ---- */
-.font-display {
-  font-family: var(--font-display);
+.font-heading {
+  font-family: var(--font-heading);
   letter-spacing: 0.02em;
   line-height: 1.1;
   text-transform: uppercase;
 }
 
-.font-sans {
-  font-family: var(--font-sans);
+.font-body {
+  font-family: var(--font-body);
 }
 
 .font-mono {
@@ -249,67 +277,71 @@ body {
 
 /* ---- Display Headings ---- */
 .heading-hero {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   font-size: var(--text-5xl);
-  line-height: 1.0;
-  letter-spacing: 0.01em;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
   text-transform: uppercase;
 }
 
 .heading-h1 {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   font-size: var(--text-4xl);
-  line-height: 1.05;
-  letter-spacing: 0.01em;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
   text-transform: uppercase;
 }
 
 .heading-h2 {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   font-size: var(--text-3xl);
-  line-height: 1.1;
-  letter-spacing: 0.015em;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
 .heading-h3 {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-2xl);
-  line-height: 1.2;
-  font-weight: 700;
+  line-height: 1.25;
+  font-weight: 600;
 }
 
 .heading-h4 {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-xl);
-  line-height: 1.25;
+  line-height: 1.3;
   font-weight: 600;
 }
 
 /* ---- Body Text ---- */
 .text-body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: 1.6;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 .text-body-sm {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-sm);
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 .text-caption {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--text-xs);
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--muted-foreground);
+  font-weight: 400;
 }
 
 .text-mono {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
+  font-weight: 400;
 }
 
 /* ---- Text Wrapping Utilities ---- */
@@ -328,12 +360,12 @@ body {
 
 /* ---- Selection ---- */
 ::selection {
-  background: var(--primary);
-  color: var(--primary-foreground);
+  background: var(--accent);
+  color: var(--text-primary);
 }
 
-/* ---- Sphere Decorative Background ---- */
-/* Visible CSS sphere decorations across the page — clearly visible on light bg */
+/* ---- Sphere Decorative Background (replaced by pastel mesh) ---- */
+/* Decorative spheres removed in favor of the soft gradient mesh above. */
 body::before,
 body::after {
   content: "";
@@ -343,43 +375,21 @@ body::after {
   z-index: 0;
 }
 
-body::before {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  left: -80px;
-  background: radial-gradient(circle at 30% 25%, oklch(0.95 0 0) 0%, oklch(0.65 0 0) 40%, oklch(0.25 0 0) 100%);
-  box-shadow:
-    inset -20px -20px 40px oklch(0.15 0 0 / 0.4),
-    0 0 60px oklch(0 0 0 / 0.15);
-  opacity: 0.85;
-}
-
-body::after {
-  width: 200px;
-  height: 200px;
-  bottom: 15%;
-  right: -50px;
-  background: radial-gradient(circle at 30% 25%, oklch(0.95 0 0) 0%, oklch(0.60 0 0) 40%, oklch(0.20 0 0) 100%);
-  box-shadow:
-    inset -15px -15px 30px oklch(0.10 0 0 / 0.5),
-    0 0 40px oklch(0 0 0 / 0.12);
-  opacity: 0.8;
-}
-
-/* ---- Bold Header ---- */
+/* ---- Bold Header (pastel) ---- */
 .site-header {
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border-bottom: 2px solid var(--primary);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  background: color-mix(in oklch, var(--surface-elevated) 88%, transparent);
 }
 
 [data-theme="dark"] .site-header {
-  background: var(--primary);
-  color: var(--primary-foreground);
+  background: color-mix(in oklch, var(--surface-elevated) 88%, transparent);
+  border-bottom-color: var(--border);
 }
 
 .site-header__inner {
@@ -388,7 +398,7 @@ body::after {
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.6rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   position: relative;
 }
 
@@ -402,29 +412,31 @@ body::after {
 }
 
 .site-header__logo {
-  height: 36px;
+  height: 32px;
   width: auto;
   display: block;
 }
 
 .site-header__wordmark {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3.5vw, 1.8rem);
   line-height: 1.1;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: inherit;
+  color: var(--text-primary);
   text-decoration: none;
+  font-weight: 500;
 }
 
-/* ---- Bento Grid ---- */
+/* ---- Bento Grid (pastel: increased gaps and card padding) ---- */
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem;
+  container-type: inline-size;
 }
 
 .bento-grid > * {
@@ -443,10 +455,19 @@ body::after {
   .bento-grid {
     grid-template-columns: 1fr;
     padding: 1rem;
+    gap: 1rem;
   }
 }
 
-/* ---- Scrollbar Styling ---- */
+/* ---- Pastel glass panel utility ---- */
+.glass-panel {
+  background: color-mix(in oklch, var(--surface-elevated) 70%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+/* ---- Scrollbar Styling (softened) ---- */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -477,4 +498,42 @@ body::after {
   body::after {
     display: none;
   }
+}
+
+/* ---- Pastel called-number pulse animation ---- */
+@keyframes pulse-soft {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.72 0.11 222deg / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px oklch(0.72 0.11 222deg / 0.08), 0 0 20px oklch(0.72 0.11 222deg / 0.12);
+  }
+}
+
+.called-pulse {
+  animation: pulse-soft 1.6s ease-in-out 2;
+}
+
+/* ---- Pastel cell hover lift ---- */
+.cell-hover {
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out;
+}
+
+.cell-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px oklch(0.45 0.01 260deg / 0.06);
+}
+
+/* ---- Pastel dabbed (called) cell ---- */
+.daubed-cell {
+  background: color-mix(in oklch, var(--accent) 18%, var(--surface-elevated));
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* ---- Winning cell glow (soft pastel) ---- */
+.winning-cell {
+  background: color-mix(in oklch, var(--accent) 22%, var(--surface-elevated));
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 0 20px oklch(0.72 0.11 222deg / 0.15);
 }

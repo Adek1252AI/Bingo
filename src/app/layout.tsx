@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
-import { Bebas_Neue, Inter, JetBrains_Mono } from 'next/font/google';
+import { Outfit, Inter, JetBrains_Mono } from 'next/font/google';
 import '@/app/globals.css';
 
-const bebasNeue = Bebas_Neue({
+const outfit = Outfit({
   subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-display',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-heading',
   display: 'swap',
 });
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-body',
   display: 'swap',
 });
 
@@ -53,7 +53,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className={`${bebasNeue.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className={`${outfit.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
         {children}
       </body>
     </html>

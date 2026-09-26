@@ -21,9 +21,9 @@ export default function AnimatedButton({ type = 'button', ...props }: Props) {
   return (
     <motion.button
       type={type}
-      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.02 }}
-      whileTap={reduceMotion ? undefined : { scale: 0.97 }}
-      transition={{ duration: 0.15, ease: 'easeOut' }}
+      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.01 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+      transition={{ duration: 0.18, ease: 'easeOut' }}
       {...props}
     />
   );

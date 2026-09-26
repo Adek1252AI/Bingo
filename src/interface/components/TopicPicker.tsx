@@ -1,7 +1,6 @@
+'use client';
 
 import { Topic } from '@/domain/entities';
-
-'use client';
 
 interface Props {
   topics: Topic[];
@@ -37,12 +36,14 @@ export default function TopicPicker({ topics, selected, onSelect }: Props) {
 const styles: Record<string, React.CSSProperties> = {
   fieldset: {
     border: '1px solid var(--border)',
-    padding: '0.75rem',
-    borderRadius: 6,
-    backgroundColor: 'var(--surface-elevated)',
+    padding: '1rem',
+    borderRadius: 12,
+    backgroundColor: 'color-mix(in oklch, var(--surface-elevated) 85%, transparent)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
   },
-  list: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
-  label: { display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' },
-  radio: { accentColor: 'var(--primary)' },
-  text: { fontWeight: 500 },
+  list: { display: 'flex', flexDirection: 'column', gap: '0.4rem' },
+  label: { display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' },
+  radio: { accentColor: 'var(--accent)' },
+  text: { fontWeight: 500, color: 'var(--text-primary)', fontSize: '0.9rem' },
 };

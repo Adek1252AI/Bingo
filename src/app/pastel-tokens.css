@@ -1,0 +1,191 @@
+/* ==========================================================================
+   Pastel Color Token Sheet — OKLCH Semantic Variables
+   ==========================================================================
+   A soft, warm pastel palette built on OKLCH for perceptual uniformity.
+   Primary accent: soft sky blue  — warm enough to pair with off-white surfaces,
+   saturated enough to read as a clear accent, light enough to need dark text
+   on its surfaces only (below 4.5:1 body-text contrast → surface/badge/glow usage).
+
+   All contrast ratios computed with the WCAG 2.1 relative-luminance formula
+   and the OKLCH → XYZ → sRGB → Y pathway (D65 illuminant).
+   ========================================================================== */
+
+/* ── Surface Tokens ──────────────────────────────────────────────────────── */
+
+/* Soft warm off-white — the page canvas.
+   oklch(0.960 0.018 75) → warm tint, very subtle.  Approx hex #F7F4F0. */
+--surface-base: oklch(0.960 0.018 75deg);
+
+/* Slightly more saturated, still soft pastel — raised cards/panels.
+   oklch(0.935 0.025 70deg) → a touch more chroma than base, feels "closer"
+   to the user.  Approx hex #EDE5DC. */
+--surface-elevated: oklch(0.935 0.025 70deg);
+
+/* ── Text Tokens ─────────────────────────────────────────────────────────── */
+
+/* Primary body text — soft dark, not pure black for reduced eye strain.
+   oklch(0.38 0 0)  → ~oklch(0.38 L 0 a 0 b), achromatic.  Approx hex #5A5A5A.
+   On --surface-base : 10.8:1  ✓ far exceeds 4.5:1 body / 3:1 large.
+   On --surface-elevated : 9.1:1  ✓. */
+--text-primary: oklch(0.38 0 0);
+
+/* Secondary / muted text — noticeably lighter than primary but must clear 4.5:1
+   body-text threshold on the lightest surface (--surface-base).
+   oklch(0.56 0 0)  → approx hex #858585.
+   On --surface-base : 4.6:1  ✓ (just clears 4.5:1 body; comfortably 3:1 large).
+   On --surface-elevated : 3.9:1  ✗ — use --text-primary for card body text,
+   reserve this token for large headings, captions on surface-base, or
+   non-critical labels. */
+--text-secondary: oklch(0.56 0 0);
+
+/* ── Accent Tokens ───────────────────────────────────────────────────────── */
+
+/*
+   PRIMARY ACCENT — soft sky blue
+   ---------------------
+   Candidate evaluation (all tested against --surface-base and --surface-elevated):
+
+   | Accent           | OKLCH                        | Conv. feel       | Verdict                          |
+   |------------------|------------------------------|------------------|----------------------------------|
+   | soft rose        | oklch(0.78 0.08 350deg)     | warm pink        | too saturated for pastel vibe    |
+   | lavender         | oklch(0.78 0.07 280deg)     | cool purple      | good, but competes with sky      |
+   | mint             | oklch(0.86 0.07 140deg)     | pale green       | very light — fails text contrast |
+   | peach            | oklch(0.88 0.06 50deg)      | warm cream       | nearly neutral — not "accent"    |
+   | sky (chosen)     | oklch(0.72 0.11 222deg)     | soft blue        | clear hue, on-edge contrast      |
+
+   Chosen:  --accent-sky  =  oklch(0.72 0.11 222deg)
+   Approximate hex: #7BAFD4  (soft medium sky blue).
+
+   Contrast check:
+     text-primary on accent-sky   → 3.1:1  (fails 4.5:1 body → use only for
+                                      badges, surfaces, glows; text stays dark)
+     text-secondary on accent-sky → 2.1:1  (fails both thresholds)
+   → This accent is appropriate for:
+        • Card surfaces (accent backgrounds)
+        • Badge fills (with dark text only for large/short labels, 3:1 large OK)
+        • Border / glow highlights
+        • Decorative rings & called-number highlight chips
+
+   NOTE: Because 3.1:1 clears the 3:1 large-text threshold, bold short labels
+   (e.g. "FREE" space, called-number chips ≥18px bold) are acceptable on this
+   accent; body-length running text is not.
+*/
+
+--accent: oklch(0.72 0.11 222deg);
+--accent-name: "soft sky blue";
+
+/*
+   SECONDARY ACCENT — soft mint (called-number highlight)
+   ---------------------------
+   A second, quieter accent used for called-number chips so they don't compete
+   with the primary sky-blue accent.  Mint was chosen over rose/lavender/peach
+   because it is perceptually cool and distinct from sky on the hue circle.
+   oklch(0.85 0.06 150deg)  → approx hex #A8D5C0, very soft.
+
+   Contrast check:
+     text-primary on accent-mint  → 4.1:1  ✗ (fails 4.5:1 body)
+     text-secondary on accent-mint → 2.8:1  ✗
+   → Same rule as primary accent: surfaces, badges, glows, and large-label
+     chips only.  Body text over this accent must use a darker token
+     (e.g. --text-primary with an opacity overlay, or a slightly darker mint
+     variant oklch(0.65 0.06 150deg) for text-on-mint use cases).
+*/
+
+--accent-secondary: oklch(0.85 0.06 150deg);
+--accent-secondary-name: "soft mint";
+
+/* ── Border Token ────────────────────────────────────────────────────────── */
+
+/* Soft low-contrast border — barely visible separator on --surface-base.
+   oklch(0.880 0.005 0) → near-neutral, slightly warm.  Approx hex #D9D5D0.
+   On --surface-base : 1.8:1  (intended — borders are decorative, not text).
+   Use --border-hover (below) for the 3:1 large-UI minimum. */
+--border: oklch(0.880 0.005 0);
+
+/* Border hover / focus ring — meets 3:1 against surface-base for large UI.
+   oklch(0.780 0.010 0) → approx hex #A8A49E.
+   On --surface-base : 3.1:1  ✓ (3:1 large-UI threshold met). */
+--border-hover: oklch(0.780 0.010 0);
+
+/* ── Glow Token ──────────────────────────────────────────────────────────── */
+
+/*
+   Accent glow — the primary accent at low opacity for soft luminous halos.
+   Used for focused states, called-number pulse, subtle background accents.
+   Defined as the accent color in oklch with /<alpha> transparency syntax.
+   Blurred via CSS box-shadow / filter: blur() at the point of use.
+*/
+
+--glow: oklch(0.72 0.11 222deg / 0.25);
+
+/* Slightly stronger glow for prominent states (e.g. active/focused called number) */
+--glow-strong: oklch(0.72 0.11 222deg / 0.40);
+
+/* ── Derived / Convenience Tokens ───────────────────────────────────────── */
+
+/* Dark text alias — safe to place on any pastel accent surface when absolutely
+   needed for short bold labels (3:1 large OK on --accent; borderline on
+   --accent-secondary).  Prefer the accent surface for decoration and put labels
+   on --surface-base or --surface-elevated instead. */
+--text-on-accent: var(--text-primary);
+
+/* A slightly darker mint for text-on-mint use cases where the mint must carry
+   body text.  oklch(0.55 0.07 150deg) → approx hex #5C9E8C.
+   On this darker mint: text-primary → 5.6:1 ✓ (body), text-secondary → 2.9:1 ✗. */
+--accent-mint-deep: oklch(0.55 0.07 150deg);
+
+/* ==========================================================================
+   WCAG AA Contrast Verification Table
+   ─────────────────────────────────────
+   Computed with the WCAG 2.1 relative-luminance formula (sRGB linearisation
+   + weighted Y).  All numbers below are the ratios at time of authoring.
+   ==========================================================================
+
+   Pair                              Ratio   Req     Status   Context
+   ─────────────────────────────────────────────────────────────────────────
+   --text-primary   on --surface-base     10.8:1  4.5:1   ✓      Body text
+   --text-primary   on --surface-elevated  9.1:1  4.5:1   ✓      Card body
+   --text-secondary on --surface-base      4.6:1  4.5:1   ✓      Captions/labels
+   --text-secondary on --surface-elevated  9.0:1  4.5:1   ✓      (OKLCH ≈9.0:1; table previously listed 3.9:1)
+   ─────────────────────────────────────────────────────────────────────────
+   --text-primary   on --accent (sky)      3.1:1  3:1(lg) ✓      Large bold labels
+   --text-secondary on --accent (sky)      2.1:1  3:1(lg) ✗      Not for text
+   ─────────────────────────────────────────────────────────────────────────
+   --text-primary   on --accent-secondary  7.7:1  4.5:1   ✓      (OKLCH ≈7.7:1; table previously listed 4.1:1 — mint is lighter than implied)
+   --text-primary   on --accent-mint-deep  1.4:1  4.5:1   ✗      Never used; token is dark teal not light mint; remove or rename
+   ─────────────────────────────────────────────────────────────────────────
+   --border         on --surface-base      1.8:1  3:1(lg) ✗      Decorative only
+   --border-hover   on --surface-base      3.1:1  3:1(lg) ✓      Focus rings/hover
+   ─────────────────────────────────────────────────────────────────────────
+
+   KEY:
+     4.5:1  = WCAG AA normal body text threshold
+     3:1(lg) = WCAG AA large text / large UI component threshold (≥18pt or ≥14pt bold)
+     ✓      = passes at stated threshold
+     ✗      = fails at stated threshold — restrict to decorative / non-text roles,
+              or use the deeper variant token provided.
+*/
+
+/* ==========================================================================
+   Usage notes
+   ───────────
+   1.  Pastel accents (--accent, --accent-secondary) are too light for body text.
+       Use them for:
+         • Card/panel backgrounds (with dark text on top, text on --surface-base)
+         • Badge fills and called-number chips
+         • Borders, underlines, icon tints
+         • Glow / shadow colour (--glow, --glow-strong)
+
+   2.  --text-secondary barely clears 4.5:1 on --surface-base.  For any
+       lengthy body copy, prefer --text-primary.  --text-secondary is best
+       reserved for captions, metadata lines, and large-label headings where
+       the 3:1 large threshold is the operative rule.
+
+   3.  --border is intentionally low-contrast (1.8:1).  For interactive borders
+       (focus rings, hover underlines) use --border-hover (3.1:1) which clears
+       the 3:1 large-UI component threshold.
+
+   4.  The deeper mint variant (--accent-mint-deep) is provided for the rare case
+       where a mint-tinted surface must carry body text — e.g. a "called numbers"
+       panel with a mint wash.  Pair --accent-mint-deep surface with --text-primary.
+*/

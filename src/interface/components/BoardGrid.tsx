@@ -44,18 +44,18 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.03,
+      staggerChildren: 0.055,
       delayChildren: 0.1,
     },
   },
 };
 
 const cellVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.28, ease: 'easeOut' },
   },
 };
 
@@ -74,21 +74,21 @@ export default function BoardGrid({
 
   return (
     <div className="mt-6">
-      <Card className="border-2 border-neutral-900 bg-white shadow-lg">
-        <CardContent className="p-4 sm:p-6">
-          <h2 className="font-display text-2xl mb-4 text-text-primary">Your Board</h2>
+      <Card className="glass-panel shadow-sm">
+        <CardContent className="p-6 sm:p-8">
+          <h2 className="font-heading text-2xl mb-6 text-text-primary">Your Board</h2>
 
-          {/* Current number display */}
+          {/* Current number display — soft pastel highlight with gentle pulse */}
           {current && (
             <motion.div
-              initial={reduceMotion ? false : { scale: 0.8, opacity: 0 }}
+              initial={reduceMotion ? false : { scale: 0.88, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="mb-4 flex justify-center"
+              transition={{ type: 'spring', stiffness: 240, damping: 26 }}
+              className="mb-6 flex justify-center"
             >
               <Badge
                 variant="default"
-                className="px-6 py-3 text-lg font-mono font-bold tracking-wider shadow-lg bg-neutral-900 text-white"
+                className="px-6 py-3 text-lg font-mono font-bold tracking-wider bg-accent text-surface-base shadow-sm called-pulse"
               >
                 {current}
               </Badge>
@@ -100,7 +100,7 @@ export default function BoardGrid({
             key={entranceKey ?? 'board'}
             data-board-key={entranceKey ?? 'board'}
             className={cn(
-              'grid grid-cols-5 gap-2 sm:gap-3',
+              'grid grid-cols-5 gap-3 sm:gap-4',
               'mx-auto max-w-[600px]'
             )}
             variants={containerVariants}
@@ -124,11 +124,15 @@ export default function BoardGrid({
                 const inner = isFree ? (
                   <div
                     className={cn(
-                      'w-full aspect-square flex items-center justify-center px-1',
-                      'rounded-lg border-2 font-mono font-semibold',
-                      'select-none',
-                      'bg-neutral-900 text-white border-neutral-900'
+                      'w-full aspect-square flex items-center justify-center px-2',
+                      'rounded-2xl border-2 font-mono font-semibold',
+                      'select-none'
                     )}
+                    style={{
+                      background: 'var(--accent)',
+                      color: 'var(--surface-base)',
+                      borderColor: 'var(--accent)',
+                    }}
                   >
                     <span
                       className="word-break-normal overflow-wrap-break-word"
@@ -142,45 +146,49 @@ export default function BoardGrid({
                     type="button"
                     aria-pressed={isCalled}
                     onClick={() => onCellToggle?.(cell)}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.94 }}
-                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    whileHover={reduceMotion ? undefined : { y: -1.5 }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.975 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
                     className={cn(
-                      'w-full aspect-square flex items-center justify-center gap-1 px-1',
-                      'rounded-lg border-2 font-mono font-semibold',
-                      'transition-colors duration-150 select-none',
+                      'w-full aspect-square flex items-center justify-center gap-1.5 px-2',
+                      'rounded-xl border-2 font-mono font-semibold',
+                      'transition-colors duration-180 select-none',
                       getTextSizeClass(displayText),
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
-                      'focus-visible:ring-offset-white',
-
-                      // Default (uncalled) cell — white with bold border
-                      !isCalled && !isCurrent && [
-                        'bg-white text-neutral-900',
-                        'border-neutral-900 hover:border-neutral-700',
-                        'hover:shadow-md',
-                      ],
-
-                      // Called cell — bold black with check
-                      isCalled && !isCurrent && [
-                        'bg-neutral-900 text-white border-neutral-900',
-                        'shadow-md',
-                      ],
-
-                      // Current cell — highlighted
-                      isCurrent && [
-                        'bg-neutral-800 text-white border-neutral-800',
-                        'shadow-lg ring-2 ring-neutral-800/50',
-                      ],
-
-                      // Winning cells
-                      isWinning && 'winning-cell ring-2 ring-neutral-900 shadow-glow'
+                      'focus-visible:ring-offset-surface-base',
+                      isWinning && 'winning-cell'
                     )}
+                    style={
+                      isCalled && !isCurrent
+                        ? {
+                            background: 'color-mix(in oklch, var(--accent) 16%, var(--surface-elevated))',
+                            borderColor: 'var(--accent)',
+                            color: 'var(--text-primary)',
+                          }
+                        : isCurrent
+                        ? {
+                            background: 'var(--accent)',
+                            color: 'var(--surface-base)',
+                            borderColor: 'var(--accent)',
+                          }
+                        : isWinning
+                        ? {
+                            background: 'color-mix(in oklch, var(--accent) 20%, var(--surface-elevated))',
+                            borderColor: 'var(--accent)',
+                            color: 'var(--surface-base)',
+                          }
+                        : {
+                            background: 'var(--surface-elevated)',
+                            color: 'var(--text-primary)',
+                            borderColor: 'var(--border)',
+                          }
+                    }
                   >
                     {isCalled && !isCurrent && (
                       <Check
                         aria-hidden="true"
-                        className="h-3 w-3 sm:h-4 sm:w-4 shrink-0"
+                        className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0"
                       />
                     )}
                     <span
@@ -208,21 +216,33 @@ export default function BoardGrid({
           </motion.div>
 
           {/* Legend */}
-          <div className="mt-4 flex flex-wrap gap-3 justify-center text-xs text-muted-foreground">
+          <div className="mt-5 flex flex-wrap gap-4 justify-center text-xs text-text-secondary">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded border-2 border-neutral-900 bg-white" />
+              <span
+                className="w-3.5 h-3.5 rounded-xl"
+                style={{ background: 'var(--surface-elevated)', border: '1px solid var(--border)' }}
+              />
               Uncalled
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-neutral-900 border-2 border-neutral-900" />
+              <span
+                className="w-3.5 h-3.5 rounded-lg"
+                style={{ background: 'var(--accent)', border: '1px solid var(--accent)' }}
+              />
               Called
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-neutral-800 border-2 border-neutral-800 ring-1 ring-neutral-800/50" />
+              <span
+                className="w-3.5 h-3.5 rounded-lg"
+                style={{ background: 'var(--accent)', border: '1px solid var(--accent)', boxShadow: '0 0 0 1px color-mix(in oklch, var(--accent) 40%, transparent)' }}
+              />
               Current
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded bg-neutral-900 border-2 border-neutral-900" />
+              <span
+                className="w-3.5 h-3.5 rounded-xl"
+                style={{ background: 'var(--accent)', border: '1px solid var(--accent)' }}
+              />
               Free
             </span>
           </div>
