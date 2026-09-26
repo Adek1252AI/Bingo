@@ -3,8 +3,8 @@
 /* ==========================================================================
    Pastel Color Token System — Light/Dark Mode with Soft Sky & Mint Accents
    ==========================================================================
-   Light mode (default): warm off-white canvas, soft sky-blue accent, gentle mint
-   secondary — pastel throughout, no harsh blacks.
+   Light mode (default when user toggles): warm off-white canvas, soft sky-blue accent,
+   gentle mint secondary — pastel throughout, no harsh blacks.
    ========================================================================== */
 
 @theme {
