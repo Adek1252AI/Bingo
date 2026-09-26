@@ -204,14 +204,13 @@ describe('BoardGrid', () => {
       });
     });
 
-    it('cell text truncates instead of wrapping', () => {
+    it('cell text wraps on word boundaries (no mid-word splits)', () => {
       const { container } = render(<BoardGrid grid={SAMPLE_GRID} />);
       const gridContainer = container.querySelector('.grid-cols-5')!;
       const spans = gridContainer.querySelectorAll('button span');
       expect(spans.length).toBe(24);
       spans.forEach((span) => {
-        expect(span).toHaveClass('truncate');
-        expect(span).toHaveClass('whitespace-nowrap');
+        expect(span).toHaveClass('overflow-wrap-break-word');
         expect(span.getAttribute('style')).toContain('cqw');
       });
     });
@@ -225,13 +224,12 @@ describe('BoardGrid', () => {
       const allButtons = gridContainer.querySelectorAll('button');
       expect(allButtons.length).toBe(24);
 
-      // All cells use inline cqw-based font sizing
+      // All cells use inline cqw-based font sizing with word-boundary wrapping
       allButtons.forEach((btn) => {
         const span = btn.querySelector('span');
         expect(span).toBeTruthy();
         expect(span?.getAttribute('style')).toContain('cqw');
-        expect(span).toHaveClass('truncate');
-        expect(span).toHaveClass('whitespace-nowrap');
+        expect(span).toHaveClass('overflow-wrap-break-word');
       });
     });
 

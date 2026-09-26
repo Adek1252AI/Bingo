@@ -312,6 +312,14 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- Text Wrapping Utilities ---- */
+/* Word-boundary wrapping with no mid-word splits, plus overflow-wrap for long tokens */
+.word-break-normal {
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
 /* ---- Focus States ---- */
 :focus-visible {
   outline: 2px solid var(--ring);

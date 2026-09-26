@@ -126,12 +126,12 @@ export default function BoardGrid({
                     className={cn(
                       'w-full aspect-square flex items-center justify-center px-1',
                       'rounded-lg border-2 font-mono font-semibold',
-                      'select-none overflow-hidden',
+                      'select-none',
                       'bg-neutral-900 text-white border-neutral-900'
                     )}
                   >
                     <span
-                      className="truncate whitespace-nowrap"
+                      className="word-break-normal overflow-wrap-break-word"
                       style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
                     >
                       {displayText}
@@ -150,7 +150,6 @@ export default function BoardGrid({
                       'rounded-lg border-2 font-mono font-semibold',
                       'transition-colors duration-150 select-none',
                       getTextSizeClass(displayText),
-                      'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
                       'focus-visible:ring-offset-white',
@@ -185,7 +184,7 @@ export default function BoardGrid({
                       />
                     )}
                     <span
-                      className="truncate whitespace-nowrap"
+                      className="word-break-normal overflow-wrap-break-word"
                       style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
                     >
                       {displayText}
