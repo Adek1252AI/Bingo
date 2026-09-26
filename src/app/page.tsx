@@ -5,7 +5,6 @@ import Shell from '@/interface/components/Shell';
 import TopicPicker from '@/interface/components/TopicPicker';
 import BoardGrid from '@/interface/components/BoardGrid';
 import ShareLink from '@/interface/components/ShareLink';
-import LoadBoardForm from '@/interface/components/LoadBoardForm';
 import WinCelebration from '@/interface/components/WinCelebration';
 import AnimatedButton from '@/interface/components/AnimatedButton';
 import { GenerateRandomBoardUseCase } from '@/application/useCases/GenerateRandomBoardUseCase';
@@ -30,7 +29,6 @@ export default function HomePage() {
   const [arrangement, setArrangement] = useState<string[][] | null>(null);
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [shareInput, setShareInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loadedFromLink, setLoadedFromLink] = useState(false);
   const [loadedTopic, setLoadedTopic] = useState<string | null>(null);
@@ -200,18 +198,6 @@ export default function HomePage() {
             <div style={styles.errorBanner}>{error}</div>
           </div>
         )}
-
-        {/* Load form — full width */}
-        <div style={styles.tile}>
-          <LoadBoardForm
-            value={shareInput}
-            onChange={value => {
-              setShareInput(value);
-              setError(null);
-            }}
-            onLoad={() => handleLoadLink(shareInput)}
-          />
-        </div>
       </div>
 
       {/* BINGO! win celebration — confetti + modal */}
