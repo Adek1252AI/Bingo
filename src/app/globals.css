@@ -471,4 +471,10 @@ body::after {
     background-attachment: scroll;
     background-position: top center;
   }
+
+  /* Hide decorative spheres on mobile — they overlap the board at narrow widths */
+  body::before,
+  body::after {
+    display: none;
+  }
 }
