@@ -7,6 +7,7 @@ import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { cn } from '@/interface/lib/cn';
 import type { Cell } from '@/domain/rules/bingo-rules';
+import { anonymizeWord } from '@/interface/lib/name-anonymizer';
 
 interface Props {
   grid: string[][];
@@ -115,6 +116,11 @@ export default function BoardGrid({
                 const isWinning = winningKeys.has(`${r}-${c}`);
                 const index = r * 5 + c;
 
+                const display = anonymizeWord(cell);
+                const displayText = display
+                  ? `${display.icon} ${display.label}`
+                  : cell;
+
                 const inner = isFree ? (
                   <div
                     className={cn(
@@ -128,7 +134,7 @@ export default function BoardGrid({
                       className="truncate whitespace-nowrap"
                       style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
                     >
-                      {cell}
+                      {displayText}
                     </span>
                   </div>
                 ) : (
@@ -143,7 +149,7 @@ export default function BoardGrid({
                       'w-full aspect-square flex items-center justify-center gap-1 px-1',
                       'rounded-lg border-2 font-mono font-semibold',
                       'transition-colors duration-150 select-none',
-                      getTextSizeClass(cell),
+                      getTextSizeClass(displayText),
                       'overflow-hidden',
                       'focus-visible:outline-none focus-visible:ring-2',
                       'focus-visible:ring-accent focus-visible:ring-offset-2',
@@ -182,7 +188,7 @@ export default function BoardGrid({
                       className="truncate whitespace-nowrap"
                       style={{ fontSize: 'clamp(0.5rem, 2.2cqw, 0.85rem)' }}
                     >
-                      {cell}
+                      {displayText}
                     </span>
                   </motion.button>
                 );
