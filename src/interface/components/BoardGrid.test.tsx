@@ -78,7 +78,7 @@ describe('BoardGrid', () => {
     // 3 called cells + 1 FREE cell (full accent bg) = 4 cells with accent color.
     const accentCells = Array.from(gridContainer.querySelectorAll('button, div'))
       .filter(el => {
-        const bg = el.style.background;
+        const bg = (el as HTMLElement).style.background;
         return bg && bg.includes('accent');
       });
     expect(accentCells.length).toBe(4);

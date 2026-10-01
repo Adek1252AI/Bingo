@@ -17,14 +17,13 @@ function fireConfetti() {
     spread: 70,
     startVelocity: 35,
     origin: { x: 0.5, y: 0.4 },
-    // Soft pastel palette — pulled from the pastel token sheet accent family
-    // paired with a soft mint and a warm pearl — never full saturation.
+    // Swiss palette — green primary + amber accent with neutral support
     colors: [
-      '#7BAFD4', // soft sky blue  — --accent primary
-      '#A8D5C0', // soft mint      — --accent-secondary
-      '#F0D9A0', // warm pearl      — complementary soft neutral
-      '#E8C4D8', // dusty rose      — warm pastel accent
-      '#C9D4E8', // pale slate      — cool neutral
+      '#15803D', // green primary   — --primary
+      '#059669', // deep green      — --secondary
+      '#D97706', // amber accent    — --accent
+      '#F59E0B', // amber light     — --accent-hover
+      '#F8FAFC', // white           — --surface-base
     ],
     // Softer shapes: a mix of classic rectangles and rounded circles,
     // with a fall-back to circles on older browsers.

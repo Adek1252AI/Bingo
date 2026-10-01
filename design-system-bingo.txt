@@ -1,0 +1,68 @@
+╔═════════════════════════════════════════════════════════════════════════════════════════╗
+║  TARGET: Bingo - RECOMMENDED DESIGN SYSTEM                                              ║
+╚═════════════════════════════════════════════════════════════════════════════════════════╝
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+├─── PATTERN ─────────────────────────────────────────────────────────────────────────────┤
+│  Name: Product Demo + Features                                                          │
+│     Conversion: Use an interactive demo only when it explains value better than static  │
+│     media. Provide captions, transcript, visible play/pause controls, and a non-video   │
+│     fallback; do not autoplay under reduced motion. Pause media when offscreen or       │
+│     hidden and keep the final product state available as static content.                │
+│     CTA: Video center + CTA right/bottom                                                │
+│     Sections:                                                                           │
+│       1. Hero                                                                           │
+│       2. Product video/mockup (center)                                                  │
+│       3. Feature breakdown per section                                                  │
+│       4. Comparison (optional)                                                          │
+│       5. CTA                                                                            │
+├─── STYLE ───────────────────────────────────────────────────────────────────────────────┤
+│  Name: Minimalism & Swiss Style                                                         │
+│     Mode Support: Light supported | Dark supported                                      │
+│     Keywords: Clean, simple, spacious, functional, white space, high contrast,          │
+│     geometric, sans-serif, grid-based, essential                                        │
+│     Best For: Enterprise apps, dashboards, documentation sites, SaaS platforms,         │
+│     professional tools                                                                  │
+│     Performance: cost:low|drivers:none | Accessibility:                                 │
+│     risk:low|requires:contrast-text-4.5,keyboard,visible-focus,reduced-motion           │
+├─── COLORS ──────────────────────────────────────────────────────────────────────────────┤
+│     Primary:           #15803D    (--color-primary)                                     │
+│     On Primary:        #FFFFFF    (--color-on-primary)                                  │
+│     Secondary:         #059669    (--color-secondary)                                   │
+│     On Secondary:      #000000    (--color-on-secondary)                                │
+│     Accent/CTA:        #D97706    (--color-accent)                                      │
+│     On Accent/CTA:     #000000    (--color-on-accent)                                   │
+│     Background:        #FFFFFF    (--color-background)                                  │
+│     Foreground:        #0F172A    (--color-foreground)                                  │
+│     Card:              #FFFFFF    (--color-card)                                        │
+│     Card Foreground:   #0F172A    (--color-card-foreground)                             │
+│     Muted:             #F0F7F3    (--color-muted)                                       │
+│     Muted Foreground:  #475569    (--color-muted-foreground)                            │
+│     Border:            #E2EFE7    (--color-border)                                      │
+│     Destructive:       #DC2626    (--color-destructive)                                 │
+│     On Destructive:    #FFFFFF    (--color-on-destructive)                              │
+│     Ring:              #15803D    (--color-ring)                                        │
+│     Notes: Word green + letter amber                                                    │
+├─── TYPOGRAPHY ──────────────────────────────────────────────────────────────────────────┤
+│  Inter / Inter                                                                          │
+│     Mood: dark, cinematic, technical, precision, clean, premium, developer,             │
+│     professional, high-end utility                                                      │
+│     Best For: Developer tools, fintech/trading, AI dashboards, streaming platforms,     │
+│     high-end productivity apps                                                          │
+│     Google Fonts:                                                                       │
+│     https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=sw  │
+│     ap                                                                                  │
+│     CSS Import: @import url('https://fonts.googleapis.com/css2?family=Inter:wght@30...  │
+├─── KEY EFFECTS ─────────────────────────────────────────────────────────────────────────┤
+│     Subtle hover (200-250ms), smooth transitions, sharp shadows if any, clear type      │
+│     hierarchy, fast loading                                                             │
+├─── AVOID ───────────────────────────────────────────────────────────────────────────────┤
+│     Excessive decoration + Complex shadows + 3D effects                                 │
+├─── PRE-DELIVERY CHECKLIST ──────────────────────────────────────────────────────────────┤
+│     [ ] No emojis as icons (use SVG: Heroicons/Lucide)                                  │
+│     [ ] cursor-pointer on all clickable elements                                        │
+│     [ ] Hover states with smooth transitions (150-300ms)                                │
+│     [ ] Light mode: text contrast 4.5:1 minimum                                         │
+│     [ ] Focus states visible for keyboard nav                                           │
+│     [ ] prefers-reduced-motion respected                                                │
+│     [ ] Responsive: 375px, 768px, 1024px, 1440px                                        │
+└─────────────────────────────────────────────────────────────────────────────────────────┘

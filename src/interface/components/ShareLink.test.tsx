@@ -1,9 +1,9 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import ShareLink from './ShareLink';
 
 // Mock the clipboard API for all tests
-const mockWriteText = vi.fn(() => Promise.resolve());
+const mockWriteText = vi.fn((_text: string) => Promise.resolve());
 
 // jsdom does not implement document.execCommand; provide a controllable mock.
 // Defaults to true (fallback succeeds) — failure tests override it.
